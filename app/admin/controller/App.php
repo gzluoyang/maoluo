@@ -3,15 +3,15 @@
 namespace app\admin\controller;
 
 use think\Request;
-use app\admin\model\App as AppModel;
+use app\admin\service\App as AppService;
 
 class App
 {
-    protected $model = null;
+    protected $service = null;
 
-    public function __construct(AppModel $model)
+    public function __construct(AppService $service)
     {
-        $this->model = $model;
+        $this->service = $service;
     }
 
     /**
@@ -21,31 +21,8 @@ class App
      */
     public function index($title = null, $page = 1, $limit = 15, $sort = 'tab_index', $dir = 'ASC')
     {
-        $params = array(
-            'list_rows' => $limit,
-            'page' => $page
-        );
-
-        if($title == null)
-        {
-            $list = $this->model->order($sort, $dir)->paginate($params);
-        }
-        else
-        {
-            $list = $this->model->where('title','like',$title)->order($sort, $dir)->paginate($params);
-        }
-
+        $list = $this->service->find($title,$page,$limit,$sort,$dir);
         return json($list);
-    }
-
-    /**
-     * 显示创建资源表单页.
-     *
-     * @return \think\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -54,52 +31,38 @@ class App
      * @param  \think\Request  $request
      * @return \think\Response
      */
-    public function save(Request $request)
+    public function create(Request $request)
+    {
+        $data = json_param();
+        $app = $this->service->create($data);
+        return json_success($app);
+    }
+
+
+    /**
+     * 保存修改的资源
+     *
+     * @param  \think\Request  $request
+     * @return \think\Response
+     */
+    public function update(Request $request)
     {
         //
         $data = json_param();
-        $id = $data['id'];
-        if($id) {
-            $app = $this->model->find($id);
-        } else {
-            $app = new AppModel();
-        }
-        $app->save($data);
+        $app = $this->service->update($data);
         return json_success($app);
     }
 
     /**
-     * 显示指定的资源
+     * 读取指定的资源
      *
      * @param  int  $id
      * @return \think\Response
      */
     public function read($id)
     {
-        //
-    }
-
-    /**
-     * 显示编辑资源表单页.
-     *
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * 保存更新的资源
-     *
-     * @param  \think\Request  $request
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
+        $app = $this->service->find($id);
+        return json_success($app);
     }
 
     /**
@@ -110,9 +73,7 @@ class App
      */
     public function delete($id)
     {
-        //
-        $app = $this->model->find($id);
-        $app->delete();
+        $this->service->delete($id);
         return json_success();
     }
 }
