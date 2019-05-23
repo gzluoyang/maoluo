@@ -19,7 +19,7 @@ return [
     // 应用地址
     'app_host'              => Env::get('app.host', ''),
     // 应用Trace（环境变量优先读取）
-    'app_trace'             => false,
+    'app_trace'             => true,
     // 应用的命名空间
     'app_namespace'         => '',
     // 是否启用路由
@@ -27,7 +27,7 @@ return [
     // 是否启用事件
     'with_event'            => true,
     // 自动多应用模式
-    'auto_multi_app'        => false,
+    'auto_multi_app'        => true,
     // 应用映射（自动多应用模式有效）
     'app_map'               => [],
     // 域名绑定（自动多应用模式有效）
@@ -51,5 +51,5 @@ return [
     // 错误显示信息,非调试模式有效
     'error_message'         => '页面错误！请稍后再试～',
     // 显示错误信息
-    'show_error_msg'        => false,
+    'show_error_msg'        => true,
 ];

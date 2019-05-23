@@ -23,7 +23,7 @@ return [
     // HTTPS代理标识
     'https_agent_name'      => '',
     // URL伪静态后缀
-    'url_html_suffix'       => 'html',
+    'url_html_suffix'       => 'do',
     // URL普通方式参数 用于自动生成
     'url_common_param'      => true,
     // 是否开启路由延迟解析
