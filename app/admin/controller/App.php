@@ -25,6 +25,12 @@ class App
         return json($list);
     }
 
+    public function tree()
+    {
+        $list = $this->service->tree();
+        return json_success($list);
+    }
+
     /**
      * 保存新建的资源
      *

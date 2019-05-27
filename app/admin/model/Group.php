@@ -6,6 +6,18 @@ use think\Model;
 
 class Group extends Model
 {
+    protected $schema = [
+        'id'          => 'int',
+        'title'       => 'string',
+        'icon'        => 'string',
+        'icon_cls'    => 'string',
+        'tab_index'   => 'int',
+        'status'      => 'int',
+        'memo'        => 'string',
+        'create_time' => 'int',
+        'update_time' => 'int',
+    ];
+
     //
     public function app()
     {

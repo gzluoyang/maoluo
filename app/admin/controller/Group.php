@@ -3,27 +3,25 @@
 namespace app\admin\controller;
 
 use think\Request;
-
+use app\admin\service\Group as GroupService;
 class Group
 {
+    protected $service = null;
+
+    public function __construct(GroupService $service)
+    {
+        $this->service = $service;
+    }
+
     /**
      * 显示资源列表
      *
      * @return \think\Response
      */
-    public function index()
+    public function index($title = null, $page = 1, $limit = 15, $sort = 'tab_index', $dir = 'ASC')
     {
-        //
-    }
-
-    /**
-     * 显示创建资源表单页.
-     *
-     * @return \think\Response
-     */
-    public function create()
-    {
-        //
+        $list = $this->service->find($title,$page,$limit,$sort,$dir);
+        return json($list);
     }
 
     /**
@@ -32,43 +30,38 @@ class Group
      * @param  \think\Request  $request
      * @return \think\Response
      */
-    public function save(Request $request)
+    public function create(Request $request)
+    {
+        $data = json_param();
+        $app = $this->service->create($data);
+        return json_success($app);
+    }
+
+
+    /**
+     * 保存修改的资源
+     *
+     * @param  \think\Request  $request
+     * @return \think\Response
+     */
+    public function update(Request $request)
     {
         //
+        $data = json_param();
+        $app = $this->service->update($data);
+        return json_success($app);
     }
 
     /**
-     * 显示指定的资源
+     * 读取指定的资源
      *
      * @param  int  $id
      * @return \think\Response
      */
     public function read($id)
     {
-        //
-    }
-
-    /**
-     * 显示编辑资源表单页.
-     *
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * 保存更新的资源
-     *
-     * @param  \think\Request  $request
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
+        $app = $this->service->find($id);
+        return json_success($app);
     }
 
     /**
@@ -79,6 +72,8 @@ class Group
      */
     public function delete($id)
     {
-        //
+        $this->service->delete($id);
+        return json_success();
     }
+
 }

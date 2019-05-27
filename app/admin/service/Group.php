@@ -2,13 +2,13 @@
 
 namespace app\admin\service;
 
-use app\admin\model\App as AppModel;
+use app\admin\model\Group as GroupModel;
 
-class App
+class Group
 {
     protected $model = null;
 
-    public function __construct(AppModel $model)
+    public function __construct(GroupModel $model)
     {
         $this->model = $model;
     }
@@ -37,22 +37,15 @@ class App
         return $list;
     }
 
-    public function tree()
-    {
-        $where = ['status' => 1];
-        $list = $this->model->where($where)->field('id,title as text,icon_cls as iconCls,true as leaf')->select();
-        return $list;
-    }
-
     /**
      * 保存新建的资源
      *
-     * @param  \app\admin\model\App $data
-     * @return \app\admin\model\App
+     * @param  \app\admin\model\Group $data
+     * @return \app\admin\model\Group
      */
     public function create($data)
     {
-        $app = new AppModel();
+        $app = new GroupModel();
         $app->save($data);
         return $app;
     }
@@ -60,8 +53,8 @@ class App
      /**
      * 保存新建的资源
      *
-     * @param  \app\admin\model\App $data
-     * @return \app\admin\model\App
+     * @param  \app\admin\model\Group $data
+     * @return \app\admin\model\Group
      */
     public function update($data)
     {
@@ -75,7 +68,7 @@ class App
      * 读取指定的资源
      *
      * @param  int  $id
-     * @return \app\admin\model\App
+     * @return \app\admin\model\Group
     */
     public function read($id)
     {
