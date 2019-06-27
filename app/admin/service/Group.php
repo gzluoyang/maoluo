@@ -2,6 +2,8 @@
 
 namespace app\admin\service;
 
+use think\Exception;
+
 use app\admin\model\Group as GroupModel;
 
 class Group
@@ -18,21 +20,24 @@ class Group
      *
      * @return 
      */
-    public function find($title = null, $page = 1, $limit = 15, $sort = 'tab_index', $dir = 'ASC')
+    public function find($app_id, $title = null, $page = 1, $limit = 15, $sort = 'tab_index', $dir = 'ASC')
     {
         $params = array(
             'list_rows' => $limit,
             'page' => $page
         );
 
-        if($title == null)
-        {
-            $list = $this->model->order($sort, $dir)->paginate($params);
+        if(empty($app_id)) {
+            throw new Exception('请选择对应的应用!');
         }
-        else
+        $where[] = ['app_id','=',$app_id];
+
+        if($title != null)
         {
-            $list = $this->model->where('title','like',$title)->order($sort, $dir)->paginate($params);
+            $where[] = ['title','like',$title];
         }
+
+        $list = $this->model->where($where)->order($sort, $dir)->paginate($params);
 
         return $list;
     }
@@ -45,9 +50,9 @@ class Group
      */
     public function create($data)
     {
-        $app = new GroupModel();
-        $app->save($data);
-        return $app;
+        $group= new GroupModel();
+        $group->save($data);
+        return $group;
     }
 
      /**

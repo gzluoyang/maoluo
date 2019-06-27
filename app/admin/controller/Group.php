@@ -3,7 +3,10 @@
 namespace app\admin\controller;
 
 use think\Request;
+use think\Exception;
+
 use app\admin\service\Group as GroupService;
+
 class Group
 {
     protected $service = null;
@@ -18,9 +21,13 @@ class Group
      *
      * @return \think\Response
      */
-    public function index($title = null, $page = 1, $limit = 15, $sort = 'tab_index', $dir = 'ASC')
+    public function index($app_id, $title = null, $page = 1, $limit = 15, $sort = 'tab_index', $dir = 'ASC')
     {
-        $list = $this->service->find($title,$page,$limit,$sort,$dir);
+        if(empty($app_id)) {
+            throw new Exception('请选择对应的应用!');
+        }
+
+       $list = $this->service->find($app_id,$title,$page,$limit,$sort,$dir);
         return json($list);
     }
 

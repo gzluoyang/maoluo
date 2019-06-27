@@ -8,6 +8,7 @@ class Group extends Model
 {
     protected $schema = [
         'id'          => 'int',
+        'app_id'      => 'int',
         'title'       => 'string',
         'icon'        => 'string',
         'icon_cls'    => 'string',

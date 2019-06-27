@@ -40,7 +40,7 @@ class App
     public function tree()
     {
         $where = ['status' => 1];
-        $list = $this->model->where($where)->field('id,title as text,icon_cls as iconCls,true as leaf')->select();
+        $list = $this->model->where($where)->order('tab_index ASC')->field('id,title as text,icon_cls as iconCls,true as leaf')->select();
         return $list;
     }
 
