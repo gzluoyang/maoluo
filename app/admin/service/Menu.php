@@ -4,7 +4,6 @@ namespace app\admin\service;
 
 use think\Exception;
 
-use app\admin\model\Group as GroupModel;
 use app\admin\model\Menu as MenuModel;
 
 class Menu
@@ -12,10 +11,9 @@ class Menu
     protected $model = null;
     protected $groupModel = null;
 
-    public function __construct(MenuModel $model, GroupModel $groupModel)
+    public function __construct(MenuModel $model)
     {
         $this->model = $model;
-        $this->groupModel = $groupModel;
     }
 
     /**

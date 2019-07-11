@@ -40,8 +40,8 @@ class Button
     public function create(Request $request)
     {
         $data = json_param();
-        $menu = $this->service->create($data);
-        return json_success($menu);
+        $button = $this->service->create($data);
+        return json_success($button);
     }
 
 
@@ -55,8 +55,8 @@ class Button
     {
         //
         $data = json_param();
-        $menu = $this->service->update($data);
-        return json_success($menu);
+        $button = $this->service->update($data);
+        return json_success($button);
     }
 
     /**
@@ -67,8 +67,8 @@ class Button
      */
     public function read($id)
     {
-        $menu = $this->service->find($id);
-        return json_success($menu);
+        $button = $this->service->find($id);
+        return json_success($button);
     }
 
     /**

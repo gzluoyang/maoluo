@@ -5,17 +5,15 @@ namespace app\admin\controller;
 use think\Request;
 use think\Exception;
 
-use app\admin\service\App as AppService;
 use app\admin\service\Group as GroupService;
 
 class Group
 {
     protected $service = null;
 
-    public function __construct(GroupService $service, AppService $appService)
+    public function __construct(GroupService $service)
     {
         $this->service = $service;
-        $this->appService = $appService;
     }
 
     /**
@@ -33,13 +31,6 @@ class Group
         return json($list);
     }
 
-    public function tree()
-    {
-        $list = $this->service->tree();
-        return json_success($list);
-    }
-
-
     /**
      * 保存新建的分组
      *
@@ -49,8 +40,8 @@ class Group
     public function create(Request $request)
     {
         $data = json_param();
-        $app = $this->service->create($data);
-        return json_success($app);
+        $group = $this->service->create($data);
+        return json_success($group);
     }
 
 
@@ -64,8 +55,8 @@ class Group
     {
         //
         $data = json_param();
-        $app = $this->service->update($data);
-        return json_success($app);
+        $group = $this->service->update($data);
+        return json_success($group);
     }
 
     /**
@@ -76,8 +67,8 @@ class Group
      */
     public function read($id)
     {
-        $app = $this->service->find($id);
-        return json_success($app);
+        $group = $this->service->find($id);
+        return json_success($group);
     }
 
     /**

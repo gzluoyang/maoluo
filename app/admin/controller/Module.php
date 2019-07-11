@@ -3,90 +3,83 @@
 namespace app\admin\controller;
 
 use think\Request;
-use app\admin\model\Module as ModuleModel;
+use app\admin\service\Module as ModuleService;
 
 class Module
 {
-    protected $model = null;
+    protected $service = null;
 
-    public function __construct(ModuleModel $model)
+    public function __construct(ModuleService $service)
     {
-        $this->model = $model;
+        $this->service = $service;
     }
 
-    /**
-     * 显示资源列表
+   /**
+     * 显示分组列表
      *
      * @return \think\Response
      */
-    public function index()
+    public function index($app_id, $title = null, $page = 1, $limit = 15, $sort = 'tab_index', $dir = 'ASC')
     {
-        //
+        if(empty($app_id)) {
+            throw new Exception('请选择对应的应用!');
+        }
+
+       $list = $this->service->find($app_id,$title,$page,$limit,$sort,$dir);
+        return json($list);
     }
 
     /**
-     * 显示创建资源表单页.
-     *
-     * @return \think\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * 保存新建的资源
+     * 保存新建的分组
      *
      * @param  \think\Request  $request
      * @return \think\Response
      */
-    public function save(Request $request)
+    public function create(Request $request)
+    {
+        $data = json_param();
+        $module = $this->service->create($data);
+        return json_success($module);
+    }
+
+
+    /**
+     * 保存修改的分组
+     *
+     * @param  \think\Request  $request
+     * @return \think\Response
+     */
+    public function update(Request $request)
     {
         //
+        $data = json_param();
+        $module = $this->service->update($data);
+        return json_success($module);
     }
 
     /**
-     * 显示指定的资源
+     * 读取指定的分组
      *
      * @param  int  $id
      * @return \think\Response
      */
     public function read($id)
     {
-        //
+        $module = $this->service->find($id);
+        return json_success($module);
     }
 
     /**
-     * 显示编辑资源表单页.
-     *
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * 保存更新的资源
-     *
-     * @param  \think\Request  $request
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * 删除指定资源
+     * 删除指定分组
      *
      * @param  int  $id
      * @return \think\Response
      */
     public function delete($id)
     {
-        //
+        $this->service->delete($id);
+        return json_success();
     }
+
+
 }

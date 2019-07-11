@@ -4,13 +4,13 @@ namespace app\admin\service;
 
 use think\Exception;
 
-use app\admin\model\Group as GroupModel;
+use app\admin\model\Module as ModuleModel;
 
-class Group
+class Module
 {
     protected $model = null;
 
-    public function __construct(GroupModel $model)
+    public function __construct(ModuleModel $model)
     {
         $this->model = $model;
     }
@@ -45,40 +45,40 @@ class Group
     /**
      * 保存新建的资源
      *
-     * @param  \app\admin\model\Group $data
-     * @return \app\admin\model\Group
+     * @param  \app\admin\model\Module $data
+     * @return \app\admin\model\Module
      */
     public function create($data)
     {
-        $group= new GroupModel();
-        $group->save($data);
-        return $group;
+        $module= new ModuleModel();
+        $module->save($data);
+        return $module;
     }
 
      /**
      * 保存新建的资源
      *
-     * @param  \app\admin\model\Group $data
-     * @return \app\admin\model\Group
+     * @param  \app\admin\model\Module $data
+     * @return \app\admin\model\Module
      */
     public function update($data)
     {
         $id = $data['id'];
-        $group = $this->model->find($id);
-        $group->save($data);
-        return $group;
+        $module = $this->model->find($id);
+        $module->save($data);
+        return $module;
     }
 
    /**
      * 读取指定的资源
      *
      * @param  int  $id
-     * @return \app\admin\model\Group
+     * @return \app\admin\model\Module
     */
     public function read($id)
     {
-        $group = $this->model->find($id);
-        return $group;
+        $module = $this->model->find($id);
+        return $module;
     }
 
     /**
@@ -89,7 +89,7 @@ class Group
     public function delete($id)
     {
         //
-        $group = $this->model->find($id);
-        $group->delete();
+        $module = $this->model->find($id);
+        $module->delete();
     }
 }

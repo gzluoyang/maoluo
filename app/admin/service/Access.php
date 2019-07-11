@@ -4,13 +4,13 @@ namespace app\admin\service;
 
 use think\Exception;
 
-use app\admin\model\Group as GroupModel;
+use app\admin\model\Access as AccessModel;
 
-class Group
+class Access
 {
     protected $model = null;
 
-    public function __construct(GroupModel $model)
+    public function __construct(AccessModel $model)
     {
         $this->model = $model;
     }
@@ -20,17 +20,17 @@ class Group
      *
      * @return 
      */
-    public function find($app_id, $title = null, $page = 1, $limit = 15, $sort = 'tab_index', $dir = 'ASC')
+    public function find($module_id, $title = null, $page = 1, $limit = 15, $sort = 'tab_index', $dir = 'ASC')
     {
         $params = array(
             'list_rows' => $limit,
             'page' => $page
         );
 
-        if(empty($app_id)) {
-            throw new Exception('请选择对应的应用!');
+        if(empty($module_id)) {
+            throw new Exception('请选择对应的分组!');
         }
-        $where[] = ['app_id','=',$app_id];
+        $where[] = ['module_id','=',$module_id];
 
         if($title != null)
         {
@@ -45,40 +45,40 @@ class Group
     /**
      * 保存新建的资源
      *
-     * @param  \app\admin\model\Group $data
-     * @return \app\admin\model\Group
+     * @param  \app\admin\model\Access $data
+     * @return \app\admin\model\Access
      */
     public function create($data)
     {
-        $group= new GroupModel();
-        $group->save($data);
-        return $group;
+        $access = new AccessModel();
+        $access->save($data);
+        return $access;
     }
 
      /**
      * 保存新建的资源
      *
-     * @param  \app\admin\model\Group $data
-     * @return \app\admin\model\Group
+     * @param  \app\admin\model\Access $data
+     * @return \app\admin\model\Access
      */
     public function update($data)
     {
         $id = $data['id'];
-        $group = $this->model->find($id);
-        $group->save($data);
-        return $group;
+        $app = $this->model->find($id);
+        $app->save($data);
+        return $app;
     }
 
    /**
      * 读取指定的资源
      *
      * @param  int  $id
-     * @return \app\admin\model\Group
+     * @return \app\admin\model\Access
     */
     public function read($id)
     {
-        $group = $this->model->find($id);
-        return $group;
+        $app = $this->model->find($id);
+        return $app;
     }
 
     /**
@@ -89,7 +89,7 @@ class Group
     public function delete($id)
     {
         //
-        $group = $this->model->find($id);
-        $group->delete();
+        $app = $this->model->find($id);
+        $app->delete();
     }
 }

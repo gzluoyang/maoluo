@@ -26,6 +26,13 @@ class Tree
         return json_success($list);
     }
 
+    public function module($parent_id)
+    {
+        $list = $this->service->app_module($parent_id);
+        return json_success($list);
+    }
+
+
     public function menu($parent_id)
     {
         $list = [];

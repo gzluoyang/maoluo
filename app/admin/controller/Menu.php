@@ -31,13 +31,6 @@ class Menu
         return json($list);
     }
 
-    public function tree($parent_id = 0)
-    {
-        $list = $this->service->tree($parent_id);
-        return json_success($list);
-    }
-
-
     /**
      * 保存新建的菜单
      *

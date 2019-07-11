@@ -7,18 +7,21 @@ use think\Exception;
 use app\admin\model\App as AppModel;
 use app\admin\model\Group as GroupModel;
 use app\admin\model\Menu as MenuModel;
+use app\admin\model\Module as ModuleModel;
 
 class Tree 
 {
     protected $appModel = null;
     protected $groupModel = null;
     protected $menuModel = null;
+    protected $moduleModel = null;
 
-    public function __construct(AppModel $appModel, GroupModel $groupModel, MenuModel $menuModel)
+    public function __construct(AppModel $appModel, GroupModel $groupModel, MenuModel $menuModel, ModuleModel $moduleModel)
     {
         $this->appModel = $appModel;
         $this->groupModel = $groupModel;
         $this->menuModel = $menuModel;
+        $this->moduleModel = $moduleModel;
     }
 
     public function app($leaf = true)
@@ -52,6 +55,21 @@ class Tree
         return $list;
     }
 
+
+    public function app_module($parent_id)
+    {
+        $list = null;
+        if($parent_id)
+        {
+            $list = $this->module($parent_id);
+        }
+        else
+        {
+            $list = $this->app(false);
+        }
+        return $list;
+    }
+
     public function app_group_menu($parent_id,$type = '')
     {
         $list = null;
@@ -73,7 +91,6 @@ class Tree
         return $list;
     }
 
-
     private function group($app_id,$leaf = true)
     {
         if(!$app_id)
@@ -90,6 +107,27 @@ class Tree
         else
         {
             $list = $this->groupModel->where($where)->order('tab_index ASC')->field('concat(id,",G") as id,title as text,icon_cls as iconCls,false as leaf')->select();
+        }
+
+        return $list;
+    }
+
+    private function module($app_id,$leaf = true)
+    {
+        if(!$app_id)
+        {
+            throw new Exception('app_id不能未空!');
+        }
+
+        $list = [];
+        $where = ['status' => 1,'app_id' => $app_id];
+        if($leaf == true)
+        {
+            $list = $this->moduleModel->where($where)->order('tab_index ASC')->field('id,title as text,true as leaf')->select();
+        }
+        else
+        {
+            $list = $this->moduleModel->where($where)->order('tab_index ASC')->field('concat(id,",G") as id,title as text,false as leaf')->select();
         }
 
         return $list;
