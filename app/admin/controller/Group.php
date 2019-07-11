@@ -5,19 +5,21 @@ namespace app\admin\controller;
 use think\Request;
 use think\Exception;
 
+use app\admin\service\App as AppService;
 use app\admin\service\Group as GroupService;
 
 class Group
 {
     protected $service = null;
 
-    public function __construct(GroupService $service)
+    public function __construct(GroupService $service, AppService $appService)
     {
         $this->service = $service;
+        $this->appService = $appService;
     }
 
     /**
-     * 显示资源列表
+     * 显示分组列表
      *
      * @return \think\Response
      */
@@ -31,8 +33,15 @@ class Group
         return json($list);
     }
 
+    public function tree()
+    {
+        $list = $this->service->tree();
+        return json_success($list);
+    }
+
+
     /**
-     * 保存新建的资源
+     * 保存新建的分组
      *
      * @param  \think\Request  $request
      * @return \think\Response
@@ -46,7 +55,7 @@ class Group
 
 
     /**
-     * 保存修改的资源
+     * 保存修改的分组
      *
      * @param  \think\Request  $request
      * @return \think\Response
@@ -60,7 +69,7 @@ class Group
     }
 
     /**
-     * 读取指定的资源
+     * 读取指定的分组
      *
      * @param  int  $id
      * @return \think\Response
@@ -72,7 +81,7 @@ class Group
     }
 
     /**
-     * 删除指定资源
+     * 删除指定分组
      *
      * @param  int  $id
      * @return \think\Response

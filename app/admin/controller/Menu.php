@@ -3,90 +3,91 @@
 namespace app\admin\controller;
 
 use think\Request;
-use app\admin\model\Menu as MenuModel;
+use think\Exception;
+
+use app\admin\service\Menu as MenuService;
 
 class Menu
 {
-    protected $model = null;
+    protected $service = null;
 
-    public function __construct(MenuModel $model)
+    public function __construct(MenuService $service)
     {
-        $this->model = $model;
+        $this->service = $service;
     }
 
     /**
-     * 显示资源列表
+     * 显示菜单列表
      *
      * @return \think\Response
      */
-    public function index()
+    public function index($group_id, $title = null, $page = 1, $limit = 15, $sort = 'tab_index', $dir = 'ASC')
     {
-        //
+        if(empty($group_id)) {
+            throw new Exception('请选择对应的分组!');
+        }
+
+       $list = $this->service->find($group_id,$title,$page,$limit,$sort,$dir);
+        return json($list);
     }
 
-    /**
-     * 显示创建资源表单页.
-     *
-     * @return \think\Response
-     */
-    public function create()
+    public function tree($parent_id = 0)
     {
-        //
+        $list = $this->service->tree($parent_id);
+        return json_success($list);
     }
 
+
     /**
-     * 保存新建的资源
+     * 保存新建的菜单
      *
      * @param  \think\Request  $request
      * @return \think\Response
      */
-    public function save(Request $request)
+    public function create(Request $request)
+    {
+        $data = json_param();
+        $menu = $this->service->create($data);
+        return json_success($menu);
+    }
+
+
+    /**
+     * 保存修改的菜单
+     *
+     * @param  \think\Request  $request
+     * @return \think\Response
+     */
+    public function update(Request $request)
     {
         //
+        $data = json_param();
+        $menu = $this->service->update($data);
+        return json_success($menu);
     }
 
     /**
-     * 显示指定的资源
+     * 读取指定的菜单
      *
      * @param  int  $id
      * @return \think\Response
      */
     public function read($id)
     {
-        //
+        $menu = $this->service->find($id);
+        return json_success($menu);
     }
 
     /**
-     * 显示编辑资源表单页.
-     *
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * 保存更新的资源
-     *
-     * @param  \think\Request  $request
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * 删除指定资源
+     * 删除指定菜单
      *
      * @param  int  $id
      * @return \think\Response
      */
     public function delete($id)
     {
-        //
+        $this->service->delete($id);
+        return json_success();
     }
+
 }

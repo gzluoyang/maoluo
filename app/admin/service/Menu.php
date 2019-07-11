@@ -2,15 +2,20 @@
 
 namespace app\admin\service;
 
-use app\admin\model\App as AppModel;
+use think\Exception;
 
-class App
+use app\admin\model\Group as GroupModel;
+use app\admin\model\Menu as MenuModel;
+
+class Menu
 {
     protected $model = null;
+    protected $groupModel = null;
 
-    public function __construct(AppModel $model)
+    public function __construct(MenuModel $model, GroupModel $groupModel)
     {
         $this->model = $model;
+        $this->groupModel = $groupModel;
     }
 
     /**
@@ -18,21 +23,24 @@ class App
      *
      * @return 
      */
-    public function find($title = null, $page = 1, $limit = 15, $sort = 'tab_index', $dir = 'ASC')
+    public function find($group_id, $title = null, $page = 1, $limit = 15, $sort = 'tab_index', $dir = 'ASC')
     {
         $params = array(
             'list_rows' => $limit,
             'page' => $page
         );
 
-        if($title == null)
-        {
-            $list = $this->model->order($sort, $dir)->paginate($params);
+        if(empty($group_id)) {
+            throw new Exception('请选择对应的分组!');
         }
-        else
+        $where[] = ['group_id','=',$group_id];
+
+        if($title != null)
         {
-            $list = $this->model->where('title','like',$title)->order($sort, $dir)->paginate($params);
+            $where[] = ['title','like',$title];
         }
+
+        $list = $this->model->where($where)->order($sort, $dir)->paginate($params);
 
         return $list;
     }
@@ -40,21 +48,21 @@ class App
     /**
      * 保存新建的资源
      *
-     * @param  \app\admin\model\App $data
-     * @return \app\admin\model\App
+     * @param  \app\admin\model\Menu $data
+     * @return \app\admin\model\Menu
      */
     public function create($data)
     {
-        $app = new AppModel();
-        $app->save($data);
-        return $app;
+        $menu = new MenuModel();
+        $menu->save($data);
+        return $menu;
     }
 
      /**
      * 保存新建的资源
      *
-     * @param  \app\admin\model\App $data
-     * @return \app\admin\model\App
+     * @param  \app\admin\model\Menu $data
+     * @return \app\admin\model\Menu
      */
     public function update($data)
     {
@@ -68,7 +76,7 @@ class App
      * 读取指定的资源
      *
      * @param  int  $id
-     * @return \app\admin\model\App
+     * @return \app\admin\model\Menu
     */
     public function read($id)
     {

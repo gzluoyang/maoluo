@@ -15,7 +15,7 @@ class App
     }
 
     /**
-     * 显示资源列表
+     * 显示应用列表
      *
      * @return \think\Response
      */
@@ -32,7 +32,7 @@ class App
     }
 
     /**
-     * 保存新建的资源
+     * 保存新建的应用
      *
      * @param  \think\Request  $request
      * @return \think\Response
@@ -46,7 +46,7 @@ class App
 
 
     /**
-     * 保存修改的资源
+     * 保存修改的应用
      *
      * @param  \think\Request  $request
      * @return \think\Response
@@ -60,7 +60,7 @@ class App
     }
 
     /**
-     * 读取指定的资源
+     * 读取指定的应用
      *
      * @param  int  $id
      * @return \think\Response
@@ -72,7 +72,7 @@ class App
     }
 
     /**
-     * 删除指定资源
+     * 删除指定应用
      *
      * @param  int  $id
      * @return \think\Response
