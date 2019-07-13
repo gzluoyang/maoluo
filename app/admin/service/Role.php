@@ -4,13 +4,13 @@ namespace app\admin\service;
 
 use think\Exception;
 
-use app\admin\model\Menu as MenuModel;
+use app\admin\model\Role as RoleModel;
 
-class Menu
+class Role
 {
     protected $model = null;
 
-    public function __construct(MenuModel $model)
+    public function __construct(RoleModel $model)
     {
         $this->model = $model;
     }
@@ -20,21 +20,18 @@ class Menu
      *
      * @return 
      */
-    public function find($group_id, $title = null, $page = 1, $limit = 15, $sort = 'tab_index', $dir = 'ASC')
+    public function find($parent_id, $name = null, $page = 1, $limit = 15, $sort = 'tab_index', $dir = 'ASC')
     {
         $params = array(
             'list_rows' => $limit,
             'page' => $page
         );
 
-        if(empty($group_id)) {
-            throw new Exception('请选择对应的分组!');
-        }
-        $where[] = ['group_id','=',$group_id];
+        $where[] = ['parent_id','=',$parent_id];
 
-        if($title != null)
+        if($name != null)
         {
-            $where[] = ['title','like',$title];
+            $where[] = ['name','like',$name];
         }
 
         $list = $this->model->where($where)->order($sort, $dir)->paginate($params);
@@ -45,21 +42,21 @@ class Menu
     /**
      * 保存新建的资源
      *
-     * @param  \app\admin\model\Menu $data
-     * @return \app\admin\model\Menu
+     * @param  \app\admin\model\Role $data
+     * @return \app\admin\model\Role
      */
     public function create($data)
     {
-        $menu = new MenuModel();
-        $menu->save($data);
-        return $menu;
+        $role = new RoleModel();
+        $role->save($data);
+        return $role;
     }
 
      /**
      * 保存新建的资源
      *
-     * @param  \app\admin\model\Menu $data
-     * @return \app\admin\model\Menu
+     * @param  \app\admin\model\Role $data
+     * @return \app\admin\model\Role
      */
     public function update($data)
     {
@@ -73,7 +70,7 @@ class Menu
      * 读取指定的资源
      *
      * @param  int  $id
-     * @return \app\admin\model\Menu
+     * @return \app\admin\model\Role
     */
     public function read($id)
     {

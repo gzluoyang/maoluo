@@ -3,96 +3,80 @@
 namespace app\admin\controller;
 
 use think\Request;
-use app\admin\model\Role as RoleModel;
+use think\Exception;
+
+use app\admin\service\Role as RoleService;
 
 class Role
 {
-    protected $model = null;
+    protected $service = null;
 
-    public function __construct(RoleModel $model)
+    public function __construct(RoleService $service)
     {
-        $this->model = $model;
+        $this->service = $service;
     }
 
     /**
-     * 显示资源列表
+     * 显示菜单列表
      *
      * @return \think\Response
      */
-    public function index()
+    public function index($parent_id, $name = null, $page = 1, $limit = 15, $sort = 'tab_index', $dir = 'ASC')
     {
-        //
-        $role = $this->model->find(3);
-        $role->users;
-        return json_encode($role);
+       $list = $this->service->find($parent_id,$name,$page,$limit,$sort,$dir);
+        return json($list);
     }
 
     /**
-     * 显示创建资源表单页.
-     *
-     * @return \think\Response
-     */
-    public function create()
-    {
-        //
-        $data = array('name' => 'user');
-        $this->model->save($data);
-        return json_encode($data);
-    }
-
-    /**
-     * 保存新建的资源
+     * 保存新建的菜单
      *
      * @param  \think\Request  $request
      * @return \think\Response
      */
-    public function save(Request $request)
+    public function create(Request $request)
+    {
+        $data = json_param();
+        $role = $this->service->create($data);
+        return json_success($role);
+    }
+
+
+    /**
+     * 保存修改的菜单
+     *
+     * @param  \think\Request  $request
+     * @return \think\Response
+     */
+    public function update(Request $request)
     {
         //
+        $data = json_param();
+        $role = $this->service->update($data);
+        return json_success($role);
     }
 
     /**
-     * 显示指定的资源
+     * 读取指定的菜单
      *
      * @param  int  $id
      * @return \think\Response
      */
     public function read($id)
     {
-        //
+        $role = $this->service->find($id);
+        return json_success($role);
     }
 
     /**
-     * 显示编辑资源表单页.
-     *
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * 保存更新的资源
-     *
-     * @param  \think\Request  $request
-     * @param  int  $id
-     * @return \think\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * 删除指定资源
+     * 删除指定菜单
      *
      * @param  int  $id
      * @return \think\Response
      */
     public function delete($id)
     {
-        //
+        $this->service->delete($id);
+        return json_success();
     }
+
 }

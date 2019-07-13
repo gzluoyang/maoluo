@@ -32,6 +32,31 @@ class Tree
         return json_success($list);
     }
 
+    public function role($parent_id)
+    {
+        $list = $this->service->role($parent_id);
+        return json_success($list);
+    }
+
+    public function access($parent_id)
+    {
+        $list = [];
+
+        $type = 0;
+        $arr = explode(',',$parent_id);
+        if(count($arr) == 2)
+        {
+            $parent_id = intval($arr[0]);
+            $type = $arr[1];
+            $list = $this->service->app_module_access($parent_id,$type);
+        }
+        else
+        {
+            $list = $this->service->app_module_access($parent_id);
+        }
+
+        return json_success($list);
+    }
 
     public function menu($parent_id)
     {
