@@ -32,9 +32,15 @@ class Tree
         return json_success($list);
     }
 
-    public function role($parent_id)
+    public function role($parent_id,$status = true,$checked = false,$user_id = null)
     {
-        $list = $this->service->role($parent_id);
+        $list = $this->service->role($parent_id,str2bool($status,true),str2bool($checked,false),$user_id);
+        return json_success($list);
+    }
+
+    public function org($parent_id)
+    {
+        $list = $this->service->org($parent_id);
         return json_success($list);
     }
 
@@ -43,7 +49,7 @@ class Tree
         $list = [];
 
         $type = 0;
-        $arr = explode(',',$parent_id);
+        $arr = str2arr($parent_id);
         if(count($arr) == 2)
         {
             $parent_id = intval($arr[0]);
@@ -63,7 +69,7 @@ class Tree
         $list = [];
 
         $type = 0;
-        $arr = explode(',',$parent_id);
+        $arr = str2arr($parent_id);
         if(count($arr) == 2)
         {
             $parent_id = intval($arr[0]);

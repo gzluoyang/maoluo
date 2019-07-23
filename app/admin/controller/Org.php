@@ -3,52 +3,32 @@
 namespace app\admin\controller;
 
 use think\Request;
+use think\Exception;
 
-use app\admin\service\User as UserService;
+use app\admin\service\Org as OrgService;
 
-class User
+class Org
 {
     protected $service = null;
 
-    public function __construct(UserService $service)
+    public function __construct(OrgService $service)
     {
         $this->service = $service;
     }
 
     /**
-     * user login
-     * $usernam
-     * $password
-     */
-    public function login($username,$password)
-    {
-        $this->service->login($username,$password);
-        return json_success();
-    }
-
-    public function roles(Request $request)
-    {
-        $data = json_param();
-        $user_id = $data['user_id'];
-        $roles = $data['roles'];
-
-        $this->service->setRoles($user_id,$roles);
-        return json_success();
-    }
-
-    /**
-     * 显示资源列表
+     * 显示菜单列表
      *
      * @return \think\Response
      */
-    public function index($org_id = 0, $name = null, $page = 1, $limit = 15, $sort = 'tab_index', $dir = 'ASC')
+    public function index($parent_id, $name = null, $page = 1, $limit = 15, $sort = 'tab_index', $dir = 'ASC')
     {
-        $list = $this->service->find($org_id,$name,$page,$limit,$sort,$dir);
+       $list = $this->service->find($parent_id,$name,$page,$limit,$sort,$dir);
         return json($list);
     }
 
     /**
-     * 保存新建的用户
+     * 保存新建的菜单
      *
      * @param  \think\Request  $request
      * @return \think\Response
@@ -62,7 +42,7 @@ class User
 
 
     /**
-     * 保存修改的用户
+     * 保存修改的菜单
      *
      * @param  \think\Request  $request
      * @return \think\Response
@@ -76,7 +56,7 @@ class User
     }
 
     /**
-     * 读取指定的用户
+     * 读取指定的菜单
      *
      * @param  int  $id
      * @return \think\Response
@@ -88,7 +68,7 @@ class User
     }
 
     /**
-     * 删除指定用户
+     * 删除指定菜单
      *
      * @param  int  $id
      * @return \think\Response
@@ -98,4 +78,5 @@ class User
         $this->service->delete($id);
         return json_success();
     }
+
 }

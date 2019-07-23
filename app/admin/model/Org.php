@@ -4,7 +4,7 @@ namespace app\admin\model;
 
 use think\Model;
 
-class Role extends Model
+class Org extends Model
 {
     protected $schema = [
         'id'          => 'int',
@@ -17,9 +17,8 @@ class Role extends Model
         'update_time' => 'int',
     ];
 
-   //
     public function users()
     {
-        return $this->belongsToMany('User','sys_user_role');
+        return $this->hasMany('User');
     }
 }

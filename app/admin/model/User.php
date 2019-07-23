@@ -7,11 +7,33 @@ use think\Exception;
 
 class User extends Model
 {
+    protected $schema = [
+        'id'          => 'int',
+        'username'    => 'string',
+        'password'    => 'string',
+        'org_id'      => 'int',
+        'login_count' => 'int',
+        'status'      => 'int',
+        'memo'        => 'string',
+        'last_login_ip'    => 'int',
+        'last_login_time'  => 'int',
+        'reg_ip'           => 'int',
+        'reg_time'         => 'int'
+    ];
+
+
     //个人配置
     public function profile()
     {
         return $this->hasOne('Profile');
     }
+
+    //
+    public function org()
+    {
+        return $this->belongsTo('Org');
+    }
+
 
     //角色
     public function roles()

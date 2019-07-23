@@ -10,6 +10,8 @@ use app\admin\model\Menu as MenuModel;
 use app\admin\model\Module as ModuleModel;
 use app\admin\model\Role as RoleModel;
 use app\admin\model\Access as AccessModel;
+use app\admin\model\Org as OrgModel;
+use app\admin\model\User as UserModel;
 
 class Tree 
 {
@@ -19,8 +21,10 @@ class Tree
     protected $moduleModel = null;
     protected $roleModel = null;
     protected $accessModel = null;
+    protected $orgModel = null;
+    protected $userModel = null;
 
-    public function __construct(AppModel $appModel, GroupModel $groupModel, MenuModel $menuModel, ModuleModel $moduleModel, RoleModel $roleModel, AccessModel $accessModel)
+    public function __construct(AppModel $appModel, GroupModel $groupModel, MenuModel $menuModel, ModuleModel $moduleModel, RoleModel $roleModel, AccessModel $accessModel, OrgModel $orgModel, UserModel $userModel)
     {
         $this->appModel = $appModel;
         $this->groupModel = $groupModel;
@@ -28,15 +32,56 @@ class Tree
         $this->moduleModel = $moduleModel;
         $this->roleModel = $roleModel;
         $this->accessModel = $accessModel;
+        $this->orgModel = $orgModel;
+        $this->userModel = $userModel;
     }
 
-    public function role($parent_id,$status = true)
+    public function role($parent_id,$status = true,$checked = false,$user_id = null)
+    {
+        $where = ['parent_id' => $parent_id];
+        if($status === true)
+            $where['status'] = 1;
+
+        $field = 'id,name as text';
+        if($checked === true)
+        {
+            $field = $field . ',false as checked';
+        }
+
+        $list = $this->roleModel->where($where)->order('tab_index ASC')->field($field)->select();
+
+        if($checked === true && !empty($user_id) && !empty($list))
+        {
+            $user = $this->userModel->find($user_id);
+            $roles = $user->roles;
+            if(!empty($roles))
+            {
+                $arr = [];
+                foreach($roles as $role)
+                {
+                    $arr[] = $role['id'];
+                }
+
+                $n = count($list);
+                foreach($list as &$item)
+                {
+                    $item['checked'] = false;
+                    if(in_array($item['id'],$arr))
+                        $item['checked'] = true;
+                }
+            }
+        }
+
+        return $list;
+    }
+
+    public function org($parent_id,$status = true)
     {
         $where = ['parent_id' => $parent_id];
         if($status == true)
             $where['status'] = 1;
 
-        $list = $this->roleModel->where($where)->order('tab_index ASC')->field('id,name as text')->select();
+        $list = $this->orgModel->where($where)->order('tab_index ASC')->field('id,name as text')->select();
         return $list;
     }
 
@@ -56,7 +101,7 @@ class Tree
         if($status == true)
             $where['status'] = 1;
 
-        $list = $this->appModel->where($where)->order('tab_index ASC')->field('id,title as text,icon_cls as iconCls,' . $str . ' as leaf')->select();
+        $list = $this->appModel->where($where)->order('tab_index ASC')->field('id,title as text,icon_cls as iconCls,"AP" as type,' . $str . ' as leaf')->select();
         return $list;
     }
 
@@ -144,11 +189,11 @@ class Tree
         $list = [];
         if($leaf == true)
         {
-            $list = $this->groupModel->where($where)->order('tab_index ASC')->field('id,title as text,icon_cls as iconCls,true as leaf')->select();
+            $list = $this->groupModel->where($where)->order('tab_index ASC')->field('id,title as text,icon_cls as iconCls,"GR" as type,true as leaf')->select();
         }
         else
         {
-            $list = $this->groupModel->where($where)->order('tab_index ASC')->field('concat(id,",G") as id,title as text,icon_cls as iconCls,false as leaf')->select();
+            $list = $this->groupModel->where($where)->order('tab_index ASC')->field('concat(id,",G") as id,title as text,icon_cls as iconCls,"GR" as type,false as leaf')->select();
         }
 
         return $list;
@@ -168,11 +213,11 @@ class Tree
         $list = [];
         if($leaf == true)
         {
-            $list = $this->moduleModel->where($where)->order('tab_index ASC')->field('id,title as text,true as leaf')->select();
+            $list = $this->moduleModel->where($where)->order('tab_index ASC')->field('id,title as text,"MO" as type,true as leaf')->select();
         }
         else
         {
-            $list = $this->moduleModel->where($where)->order('tab_index ASC')->field('concat(id,",M") as id,title as text,false as leaf')->select();
+            $list = $this->moduleModel->where($where)->order('tab_index ASC')->field('concat(id,",M") as id,title as text,"MO" as type,false as leaf')->select();
         }
 
         return $list;
@@ -189,7 +234,7 @@ class Tree
         if($status == true)
             $where['status'] = 1;
         
-        $list = $this->menuModel->where($where)->order('tab_index ASC')->field('id,title as text,icon_cls as iconCls,true as leaf')->select();
+        $list = $this->menuModel->where($where)->order('tab_index ASC')->field('id,title as text,icon_cls as iconCls,"ME" as type,true as leaf')->select();
         return $list;
     }
 
@@ -204,7 +249,7 @@ class Tree
         if($status == true)
             $where['status'] = 1;
 
-        $list = $this->accessModel->where($where)->order('tab_index ASC')->field('id,title as text,true as leaf,true as checked')->select();
+        $list = $this->accessModel->where($where)->order('tab_index ASC')->field('id,title as text,url as qtip,true as leaf,"AC" as type,true as checked')->select();
         return $list;
     }
 
