@@ -36,7 +36,7 @@ class Tree
         $this->userModel = $userModel;
     }
 
-    public function role($parent_id,$status = true,$checked = false,$user_id = null)
+    public function role($parent_id,$user_id = null,$status = true,$checked = false)
     {
         $where = ['parent_id' => $parent_id];
         if($status === true)
@@ -75,6 +75,59 @@ class Tree
         return $list;
     }
 
+    public function user($parent_id,$role_id,$status = true,$checked = false)
+    {
+        $list = [];
+
+        $arr = str2arr($parent_id);
+        $parent_id = intval($arr[0]);
+
+        $where = ['parent_id' => $parent_id];
+        if($status == true)
+            $where['status'] = 1;
+
+        $orgs = $this->orgModel->where($where)->order('tab_index ASC')->field('concat(id,",O") as id,name as text')->select();
+        if(!empty($orgs))
+        {
+            foreach($orgs as $org)
+            {
+                $list[] = $org;
+            }
+        }
+
+        $role = $this->roleModel->find($role_id);
+        $users = $role->users;
+        if(!empty($users))
+        {
+            $arr = [];
+            foreach($users as $user)
+            {
+                $arr[] = $user['id'];
+            }
+        }
+
+        $where = ['org_id' => $parent_id];
+        if($status == true)
+            $where['status'] = 1;
+
+        $users = $this->userModel->where($where)->order('tab_index ASC')->field('id,username as text,true as leaf,false as checked')->select();
+
+        if(!empty($users))
+        {
+            foreach($users as $user)
+            {
+                $user['iconCls'] = 'fa-user';
+                if(in_array($user['id'],$arr))
+                    $user['checked'] = true;
+
+                $list[] = $user;
+            }
+        }
+
+        return $list;
+    }
+
+
     public function org($parent_id,$status = true)
     {
         $where = ['parent_id' => $parent_id];
@@ -87,21 +140,24 @@ class Tree
 
     public function app($leaf = true,$status = true)
     {
-        $str = 'true';
-        if($leaf == true)
-        {
-            $str = 'true';
-        }
-        else
-        {
-            $str = 'false';
-        }
-
         $where = [];
         if($status == true)
             $where['status'] = 1;
 
-        $list = $this->appModel->where($where)->order('tab_index ASC')->field('id,title as text,icon_cls as iconCls,"AP" as type,' . $str . ' as leaf')->select();
+        $list = [];
+
+        $str = 'true';
+        if($leaf == true)
+        {
+            $str = 'true';
+            $list = $this->appModel->where($where)->order('tab_index ASC')->field('id,title as text,icon_cls as iconCls,"AP" as type,' . $str . ' as leaf')->select();
+        }
+        else
+        {
+            $str = 'false';
+            $list = $this->appModel->where($where)->order('tab_index ASC')->field('concat(id,",A") as id,title as text,icon_cls as iconCls,"AP" as type,' . $str . ' as leaf')->select();
+        }
+
         return $list;
     }
 
@@ -133,18 +189,35 @@ class Tree
         return $list;
     }
 
-    public function app_module_access($parent_id,$type = '',$status = true)
+    public function app_module_access($parent_id,$role_id,$type,$status = false,$checked = true)
     {
         $list = null;
         if($parent_id)
         {
-            if($type == '')
+            if($type == 'A')
             {
                 $list = $this->module($parent_id,false,$status);
             }
             else if($type == 'M')
             {
                 $list = $this->access($parent_id,$status);
+
+                $role = $this->roleModel->find($role_id);
+                $accesses = $role->accesses;
+                if(!empty($accesses))
+                {
+                    $arr = [];
+                    foreach($accesses as $access)
+                    {
+                        $arr[] = $access['id'];
+                    }
+
+                    foreach($list as &$item)
+                    {
+                        if(in_array($item['id'],$arr))
+                            $item['checked'] = true;
+                    }
+                }
             }
         }
         else
@@ -154,12 +227,12 @@ class Tree
         return $list;
     }
 
-    public function app_group_menu($parent_id,$type = '',$status = true)
+    public function app_group_menu($parent_id,$type = '',$status = false)
     {
         $list = null;
         if($parent_id)
         {
-            if($type == '')
+            if($type == 'A')
             {
                 $list = $this->group($parent_id,false,$status);
             }
@@ -211,7 +284,7 @@ class Tree
             $where['status'] = 1;
 
         $list = [];
-        if($leaf == true)
+        if($leaf === true)
         {
             $list = $this->moduleModel->where($where)->order('tab_index ASC')->field('id,title as text,"MO" as type,true as leaf')->select();
         }
@@ -249,7 +322,7 @@ class Tree
         if($status == true)
             $where['status'] = 1;
 
-        $list = $this->accessModel->where($where)->order('tab_index ASC')->field('id,title as text,url as qtip,true as leaf,"AC" as type,true as checked')->select();
+        $list = $this->accessModel->where($where)->order('tab_index ASC')->field('id,title as text,url as qtip,true as leaf,"AC" as type,false as checked')->select();
         return $list;
     }
 

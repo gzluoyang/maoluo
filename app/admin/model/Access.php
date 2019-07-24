@@ -11,4 +11,9 @@ class Access extends Model
     {
         return $this->belongTo('Module');
     }
+
+    public function roles()
+    {
+        return $this->belongsToMany('Role');
+    }
 }

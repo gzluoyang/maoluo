@@ -20,6 +20,12 @@ class Role extends Model
    //
     public function users()
     {
-        return $this->belongsToMany('User','sys_user_role');
+        return $this->belongsToMany('User','user_role');
     }
+
+    public function accesses()
+    {
+        return $this->belongsToMany('Access','access_role');
+    }
+
 }

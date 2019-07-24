@@ -3,6 +3,7 @@
 namespace app\admin\service;
 
 use think\Exception;
+use think\facade\Db;
 
 use app\admin\model\Role as RoleModel;
 
@@ -89,4 +90,39 @@ class Role
         $app = $this->model->find($id);
         $app->delete();
     }
+
+    public function setUsers($role_id,$users)
+    {
+        $role = $this->model->find($role_id);
+        Db::startTrans();
+        try
+        {
+            $role->users()->detach();
+            $role->users()->saveAll($users);
+            Db::commit();
+        }
+        catch(Exception $e)
+        {
+            Db::rollback();
+            throw $e;
+        }
+    }
+
+    public function setAccesses($role_id,$accesses)
+    {
+        $role = $this->model->find($role_id);
+        Db::startTrans();
+        try
+        {
+            $role->accesses()->detach();
+            $role->accesses()->saveAll($accesses);
+            Db::commit();
+        }
+        catch(Exception $e)
+        {
+            Db::rollback();
+            throw $e;
+        }
+    }
+
 }

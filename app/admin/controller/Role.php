@@ -27,6 +27,26 @@ class Role
         return json($list);
     }
 
+    public function users(Request $request)
+    {
+        $data = json_param();
+        $role_id = $data['role_id'];
+        $users = $data['users'];
+
+        $this->service->setUsers($role_id,$users);
+        return json_success();
+    }
+
+    public function accesses(Request $request)
+    {
+        $data = json_param();
+        $role_id = $data['role_id'];
+        $accesses = $data['accesses'];
+
+        $this->service->setAccesses($role_id,$accesses);
+        return json_success();
+    }
+
     /**
      * 保存新建的菜单
      *
