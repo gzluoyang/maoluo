@@ -31,6 +31,17 @@ class Button
         return json($list);
     }
 
+    public function roles(Request $request)
+    {
+        $data = json_param();
+        $button_id = $data['button_id'];
+        $roles = $data['roles'];
+
+        $this->service->setRoles($button_id,$roles);
+        return json_success();
+    }
+
+
     /**
      * 保存新建的按钮
      *

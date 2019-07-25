@@ -25,4 +25,9 @@ class Button extends Model
     {
         return $this->belongTo('Menu');
     }
+
+    public function roles()
+    {
+        return $this->belongsToMany('Role');
+    }
 }

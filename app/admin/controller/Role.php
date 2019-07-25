@@ -47,6 +47,26 @@ class Role
         return json_success();
     }
 
+    public function menus(Request $request)
+    {
+        $data = json_param();
+        $role_id = $data['role_id'];
+        $menus = $data['menus'];
+
+        $this->service->setMenus($role_id,$menus);
+        return json_success();
+    }
+
+    public function buttons(Request $request)
+    {
+        $data = json_param();
+        $role_id = $data['role_id'];
+        $buttons = $data['buttons'];
+
+        $this->service->setButtons($role_id,$buttons);
+        return json_success();
+    }
+
     /**
      * 保存新建的菜单
      *

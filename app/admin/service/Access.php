@@ -3,6 +3,7 @@
 namespace app\admin\service;
 
 use think\Exception;
+use think\facade\Db;
 
 use app\admin\model\Access as AccessModel;
 
@@ -92,4 +93,22 @@ class Access
         $app = $this->model->find($id);
         $app->delete();
     }
+
+    public function setRoles($access_id,$roles)
+    {
+        $access = $this->model->find($access_id);
+        Db::startTrans();
+        try
+        {
+            $access->roles()->detach();
+            $access->roles()->saveAll($roles);
+            Db::commit();
+        }
+        catch(Exception $e)
+        {
+            Db::rollback();
+            throw $e;
+        }
+    }
+
 }

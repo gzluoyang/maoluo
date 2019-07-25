@@ -31,6 +31,16 @@ class Access
         return json($list);
     }
 
+    public function roles(Request $request)
+    {
+        $data = json_param();
+        $access_id = $data['access_id'];
+        $roles = $data['roles'];
+
+        $this->service->setRoles($access_id,$roles);
+        return json_success();
+    }
+
     /**
      * 保存新建的访问
      *

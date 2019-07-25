@@ -31,6 +31,16 @@ class Menu
         return json($list);
     }
 
+    public function roles(Request $request)
+    {
+        $data = json_param();
+        $menu_id = $data['menu_id'];
+        $roles = $data['roles'];
+
+        $this->service->setRoles($menu_id,$roles);
+        return json_success();
+    }
+
     /**
      * 保存新建的菜单
      *

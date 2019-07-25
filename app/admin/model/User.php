@@ -34,7 +34,6 @@ class User extends Model
         return $this->belongsTo('Org');
     }
 
-
     //角色
     public function roles()
     {

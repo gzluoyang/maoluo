@@ -28,4 +28,14 @@ class Role extends Model
         return $this->belongsToMany('Access','access_role');
     }
 
+    public function menus()
+    {
+        return $this->belongsToMany('Menu','menu_role');
+    }
+
+    public function buttons()
+    {
+        return $this->belongsToMany('Button','button_role');
+    }
+
 }

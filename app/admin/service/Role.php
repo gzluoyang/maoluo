@@ -125,4 +125,38 @@ class Role
         }
     }
 
+    public function setMenus($role_id,$menus)
+    {
+        $role = $this->model->find($role_id);
+        Db::startTrans();
+        try
+        {
+            $role->menus()->detach();
+            $role->menus()->saveAll($menus);
+            Db::commit();
+        }
+        catch(Exception $e)
+        {
+            Db::rollback();
+            throw $e;
+        }
+    }
+
+    public function setButtons($role_id,$buttons)
+    {
+        $role = $this->model->find($role_id);
+        Db::startTrans();
+        try
+        {
+            $role->buttons()->detach();
+            $role->buttons()->saveAll($buttons);
+            Db::commit();
+        }
+        catch(Exception $e)
+        {
+            Db::rollback();
+            throw $e;
+        }
+    }
+
 }

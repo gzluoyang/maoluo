@@ -7,6 +7,7 @@ use think\Exception;
 use app\admin\model\App as AppModel;
 use app\admin\model\Group as GroupModel;
 use app\admin\model\Menu as MenuModel;
+use app\admin\model\Button as ButtonModel;
 use app\admin\model\Module as ModuleModel;
 use app\admin\model\Role as RoleModel;
 use app\admin\model\Access as AccessModel;
@@ -18,17 +19,19 @@ class Tree
     protected $appModel = null;
     protected $groupModel = null;
     protected $menuModel = null;
+    protected $buttonModel = null;
     protected $moduleModel = null;
     protected $roleModel = null;
     protected $accessModel = null;
     protected $orgModel = null;
     protected $userModel = null;
 
-    public function __construct(AppModel $appModel, GroupModel $groupModel, MenuModel $menuModel, ModuleModel $moduleModel, RoleModel $roleModel, AccessModel $accessModel, OrgModel $orgModel, UserModel $userModel)
+    public function __construct(AppModel $appModel, GroupModel $groupModel, MenuModel $menuModel, ButtonModel $buttonModel, ModuleModel $moduleModel, RoleModel $roleModel, AccessModel $accessModel, OrgModel $orgModel, UserModel $userModel)
     {
         $this->appModel = $appModel;
         $this->groupModel = $groupModel;
         $this->menuModel = $menuModel;
+        $this->buttonModel = $buttonModel;
         $this->moduleModel = $moduleModel;
         $this->roleModel = $roleModel;
         $this->accessModel = $accessModel;
@@ -36,7 +39,7 @@ class Tree
         $this->userModel = $userModel;
     }
 
-    public function role($parent_id,$user_id = null,$status = true,$checked = false)
+    public function role($parent_id,$user_id = null,$access_id = null,$menu_id = null,$button_id = null,$status = true,$checked = false)
     {
         $where = ['parent_id' => $parent_id];
         if($status === true)
@@ -50,27 +53,97 @@ class Tree
 
         $list = $this->roleModel->where($where)->order('tab_index ASC')->field($field)->select();
 
-        if($checked === true && !empty($user_id) && !empty($list))
+        if($checked === true && !empty($list))
         {
-            $user = $this->userModel->find($user_id);
-            $roles = $user->roles;
-            if(!empty($roles))
+            if(!empty($user_id))
             {
-                $arr = [];
-                foreach($roles as $role)
+                $user = $this->userModel->find($user_id);
+                $roles = $user->roles;
+                if(!empty($roles))
                 {
-                    $arr[] = $role['id'];
-                }
+                    $arr = [];
+                    foreach($roles as $role)
+                    {
+                        $arr[] = $role['id'];
+                    }
 
-                $n = count($list);
-                foreach($list as &$item)
-                {
-                    $item['checked'] = false;
-                    if(in_array($item['id'],$arr))
-                        $item['checked'] = true;
+                    $n = count($list);
+                    foreach($list as &$item)
+                    {
+                        $item['checked'] = false;
+                        if(in_array($item['id'],$arr))
+                            $item['checked'] = true;
+                    }
                 }
             }
-        }
+
+            if(!empty($access_id))
+            {
+                $access = $this->accessModel->find($access_id);
+                $roles = $access->roles;
+                if(!empty($roles))
+                {
+                    $arr = [];
+                    foreach($roles as $role)
+                    {
+                        $arr[] = $role['id'];
+                    }
+
+                    $n = count($list);
+                    foreach($list as &$item)
+                    {
+                        $item['checked'] = false;
+                        if(in_array($item['id'],$arr))
+                            $item['checked'] = true;
+                    }
+                }
+            }
+
+            if(!empty($menu_id))
+            {
+                $menu = $this->menuModel->find($menu_id);
+                $roles = $menu->roles;
+                if(!empty($roles))
+                {
+                    $arr = [];
+                    foreach($roles as $role)
+                    {
+                        $arr[] = $role['id'];
+                    }
+
+                    $n = count($list);
+                    foreach($list as &$item)
+                    {
+                        $item['checked'] = false;
+                        if(in_array($item['id'],$arr))
+                            $item['checked'] = true;
+                    }
+                }
+            }
+
+            if(!empty($button_id))
+            {
+                $button = $this->buttonModel->find($button_id);
+                $roles = $button->roles;
+                if(!empty($roles))
+                {
+                    $arr = [];
+                    foreach($roles as $role)
+                    {
+                        $arr[] = $role['id'];
+                    }
+
+                    $n = count($list);
+                    foreach($list as &$item)
+                    {
+                        $item['checked'] = false;
+                        if(in_array($item['id'],$arr))
+                            $item['checked'] = true;
+                    }
+                }
+            }
+
+       }
 
         return $list;
     }
@@ -227,7 +300,7 @@ class Tree
         return $list;
     }
 
-    public function app_group_menu($parent_id,$type = '',$status = false)
+    public function app_group_menu($parent_id,$role_id,$type = '',$status = false,$checked = true)
     {
         $list = null;
         if($parent_id)
@@ -238,8 +311,73 @@ class Tree
             }
             else if($type == 'G')
             {
-                $list = $this->menu($parent_id,$status);
+                $list = $this->menu($parent_id,$status,$checked);
+
+                if(!empty($role_id))
+                {
+                    $role = $this->roleModel->find($role_id);
+                    $menus = $role->menus;
+                    if(!empty($menus))
+                    {
+                        $arr = [];
+                        foreach($menus as $menu)
+                        {
+                            $arr[] = $menu['id'];
+                        }
+
+                        foreach($list as &$item)
+                        {
+                            if(in_array($item['id'],$arr))
+                                $item['checked'] = true;
+                        }
+                    }
+                }
+           }
+        }
+        else
+        {
+            $list = $this->app(false,$status);
+        }
+        return $list;
+    }
+
+    public function app_group_menu_button($parent_id,$role_id,$type = '',$status = false,$checked = true)
+    {
+        $list = null;
+        if($parent_id)
+        {
+            if($type == 'A')
+            {
+                $list = $this->group($parent_id,false,$status);
             }
+            else if($type == 'G')
+            {
+                $list = $this->menu($parent_id,$status,false,false);
+            }
+            else if($type == 'M')
+            {
+                $list = $this->button($parent_id,$status,$checked,true);
+
+                if(!empty($role_id))
+                {
+                    $role = $this->roleModel->find($role_id);
+                    $buttons = $role->buttons;
+                    if(!empty($buttons))
+                    {
+                        $arr = [];
+                        foreach($buttons as $button)
+                        {
+                            $arr[] = $button['id'];
+                        }
+
+                        foreach($list as &$item)
+                        {
+                            if(in_array($item['id'],$arr))
+                                $item['checked'] = true;
+                        }
+                    }
+                }
+           }
         }
         else
         {
@@ -296,7 +434,7 @@ class Tree
         return $list;
     }
 
-    private function menu($group_id,$status = true)
+    private function menu($group_id,$status = true,$checked = false,$leaf = true)
     {
         if(!$group_id)
         {
@@ -306,8 +444,40 @@ class Tree
         $where = ['group_id' => $group_id];
         if($status == true)
             $where['status'] = 1;
+
+        $field = 'id,title as text,icon_cls as iconCls,"ME" as type';
+        if($leaf === true)
+        {
+            $field = $field . ',true as leaf';
+        }
+        else
+        {
+            $field = 'concat(id,",M") as id,title as text,icon_cls as iconCls,"ME" as type';
+        }
+
+        if($checked === true)
+            $field = $field . ',false as checked';
+       
+        $list = $this->menuModel->where($where)->order('tab_index ASC')->field($field)->select();
+        return $list;
+    }
+
+    private function button($menu_id,$status = true,$checked = false)
+    {
+        if(!$menu_id)
+        {
+            throw new Exception('menu_id不能未空!');
+        }
+
+        $where = ['menu_id' => $menu_id];
+        if($status == true)
+            $where['status'] = 1;
+
+        $field = 'id,title as text,icon_cls as iconCls,"BU" as type,true as leaf';
+        if($checked === true)
+            $field = $field . ',false as checked';
         
-        $list = $this->menuModel->where($where)->order('tab_index ASC')->field('id,title as text,icon_cls as iconCls,"ME" as type,true as leaf')->select();
+        $list = $this->buttonModel->where($where)->order('tab_index ASC')->field($field)->select();
         return $list;
     }
 

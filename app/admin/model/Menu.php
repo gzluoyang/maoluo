@@ -30,4 +30,10 @@ class Menu extends Model
     {
         return $this->hasMany('Button');
     }
+
+    public function roles()
+    {
+        return $this->belongsToMany('Role');
+    }
+
 }

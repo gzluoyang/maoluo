@@ -32,9 +32,9 @@ class Tree
         return json_success($list);
     }
 
-    public function role($parent_id,$user_id = null,$status = true,$checked = false)
+    public function role($parent_id,$user_id = null,$access_id = null,$menu_id = null,$button_id = null,$status = true,$checked = false)
     {
-        $list = $this->service->role($parent_id,$user_id,str2bool($status,true),str2bool($checked,false));
+        $list = $this->service->role($parent_id,$user_id,$access_id,$menu_id,$button_id,str2bool($status,true),str2bool($checked,false));
         return json_success($list);
     }
 
@@ -69,23 +69,30 @@ class Tree
         return json_success($list);
     }
 
-    public function menu($parent_id)
+    public function menu($parent_id,$role_id = null,$status = false,$checked = false)
     {
-        $list = [];
-
-        $type = 0;
         $arr = str2arr($parent_id);
+        $parent_id = intval($arr[0]);
+        $type = null;
         if(count($arr) == 2)
-        {
-            $parent_id = intval($arr[0]);
             $type = $arr[1];
-            $list = $this->service->app_group_menu($parent_id,$type);
-        }
-        else
-        {
-            $list = $this->service->app_group_menu($parent_id);
-        }
+        
+        $list = $this->service->app_group_menu($parent_id,$role_id,$type,str2bool($status,false),str2bool($checked,true));
 
         return json_success($list);
     }
+
+    public function button($parent_id,$role_id = null,$status = false,$checked = true)
+    {
+        $arr = str2arr($parent_id);
+        $parent_id = intval($arr[0]);
+        $type = null;
+        if(count($arr) == 2)
+            $type = $arr[1];
+        
+        $list = $this->service->app_group_menu_button($parent_id,$role_id,$type,str2bool($status,false),str2bool($checked,true));
+
+        return json_success($list);
+    }
+
 }

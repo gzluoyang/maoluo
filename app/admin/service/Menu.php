@@ -3,6 +3,7 @@
 namespace app\admin\service;
 
 use think\Exception;
+use think\facade\Db;
 
 use app\admin\model\Menu as MenuModel;
 
@@ -92,4 +93,22 @@ class Menu
         $app = $this->model->find($id);
         $app->delete();
     }
+
+    public function setRoles($menu_id,$roles)
+    {
+        $menu = $this->model->find($menu_id);
+        Db::startTrans();
+        try
+        {
+            $menu->roles()->detach();
+            $menu->roles()->saveAll($roles);
+            Db::commit();
+        }
+        catch(Exception $e)
+        {
+            Db::rollback();
+            throw $e;
+        }
+    }
+
 }
