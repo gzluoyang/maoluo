@@ -16,7 +16,7 @@
 return [
     'type' => 'complex',
     'default' => [
-        'type' => 'file'
+        'type' => 'redis'
     ],
     'file' => [
         'type' => 'file',

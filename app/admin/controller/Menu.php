@@ -69,6 +69,12 @@ class Menu
         return json_success($menu);
     }
 
+    public function move($id,$group_id)
+    {
+        $group = $this->service->move($id,$group_id);
+        return json_success($group);
+    }
+
     /**
      * 读取指定的菜单
      *

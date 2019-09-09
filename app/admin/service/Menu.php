@@ -44,6 +44,23 @@ class Menu
     }
 
     /**
+     * 显示某分组所有可用的菜单
+     * @param $module_id 模块ID
+     * @return Array
+     */
+    public function findAllEnabledByGroupID($group_id)
+    {
+        $where = array(
+            'group_id' => $group_id,
+            'status' => 1
+        );
+
+        $field = 'title as text,url as viewType,icon,icon_cls as iconCls,tab_index as tabIndex,memo as tip,true as leaf';
+        $list = $this->model->field($field)->where($where)->order('tab_index','asc')->select();
+        return $list;
+    }
+    
+    /**
      * 保存新建的资源
      *
      * @param  \app\admin\model\Menu $data
@@ -65,9 +82,17 @@ class Menu
     public function update($data)
     {
         $id = $data['id'];
-        $app = $this->model->find($id);
-        $app->save($data);
-        return $app;
+        $menu = $this->model->find($id);
+        $menu->save($data);
+        return $menu;
+    }
+
+    public function move($id,$group_id)
+    {
+        $menu = $this->model->find($id);
+        $menu['group_id'] = $group_id;
+        $menu->save();
+        return $menu;
     }
 
    /**
@@ -78,8 +103,8 @@ class Menu
     */
     public function read($id)
     {
-        $app = $this->model->find($id);
-        return $app;
+        $menu = $this->model->find($id);
+        return $menu;
     }
 
     /**
@@ -90,8 +115,8 @@ class Menu
     public function delete($id)
     {
         //
-        $app = $this->model->find($id);
-        $app->delete();
+        $menu = $this->model->find($id);
+        $menu->delete();
     }
 
     public function setRoles($menu_id,$roles)

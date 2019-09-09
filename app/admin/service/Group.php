@@ -43,6 +43,23 @@ class Group
     }
 
     /**
+     * 显示某应用的所有可用的分组
+     * @param $app_id 应用ID
+     * @return Array
+     */
+    public function findAllEnabledByAppID($app_id)
+    {
+        $where = array(
+            'app_id' => $app_id,
+            'status' => 1
+        );
+
+        $field = 'id,title as text,icon,icon_cls as iconCls,tab_index as tabIndex,memo as tip';
+        $list = $this->model->field($field)->where($where)->order('tab_index','asc')->select();
+        return $list;
+    }
+
+    /**
      * 保存新建的资源
      *
      * @param  \app\admin\model\Group $data
@@ -66,6 +83,14 @@ class Group
         $id = $data['id'];
         $group = $this->model->find($id);
         $group->save($data);
+        return $group;
+    }
+
+    public function move($id,$app_id)
+    {
+        $group = $this->model->find($id);
+        $group['app_id'] = $app_id;
+        $group->save();
         return $group;
     }
 

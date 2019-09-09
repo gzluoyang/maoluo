@@ -59,6 +59,12 @@ class Group
         return json_success($group);
     }
 
+    public function move($id,$app_id)
+    {
+        $group = $this->service->move($id,$app_id);
+        return json_success($group);
+    }
+
     /**
      * 读取指定的分组
      *

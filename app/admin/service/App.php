@@ -38,6 +38,19 @@ class App
     }
 
     /**
+     * 显示所有可用的应用
+     */
+    public function findAllEnabled()
+    {
+        $where = array(
+            'status' => 1
+        );
+        $field = 'id as value,title as tooltip,icon,icon_cls as iconCls,tab_index as tabIndex,memo as tip';
+        $list = $this->model->field($field)->where($where)->order('tab_index','asc')->select();
+        return $list;
+    }
+
+    /**
      * 保存新建的资源
      *
      * @param  \app\admin\model\App $data
