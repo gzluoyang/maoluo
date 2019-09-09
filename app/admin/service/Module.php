@@ -69,7 +69,15 @@ class Module
         return $module;
     }
 
-   /**
+    public function move($id,$app_id)
+    {
+        $module = $this->model->find($id);
+        $module['app_id'] = $app_id;
+        $module->save();
+        return $module;
+    }
+
+    /**
      * 读取指定的资源
      *
      * @param  int  $id

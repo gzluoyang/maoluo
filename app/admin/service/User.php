@@ -68,6 +68,14 @@ class User
         return $app;
     }
 
+    public function move($id,$org_id)
+    {
+        $user = $this->model->find($id);
+        $user['org_id'] = $org_id;
+        $user->save();
+        return $user;
+    }
+
    /**
      * 读取指定的资源
      *

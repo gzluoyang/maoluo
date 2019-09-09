@@ -70,7 +70,15 @@ class Button
         return $button;
     }
 
-   /**
+    public function move($id,$menu_id)
+    {
+        $button = $this->model->find($id);
+        $button['menu_id'] = $menu_id;
+        $button->save();
+        return $button;
+    }
+
+    /**
      * 读取指定的资源
      *
      * @param  int  $id

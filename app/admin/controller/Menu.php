@@ -71,8 +71,8 @@ class Menu
 
     public function move($id,$group_id)
     {
-        $group = $this->service->move($id,$group_id);
-        return json_success($group);
+        $menu = $this->service->move($id,$group_id);
+        return json_success($menu);
     }
 
     /**

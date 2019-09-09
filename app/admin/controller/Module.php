@@ -57,6 +57,12 @@ class Module
         return json_success($module);
     }
 
+    public function move($id,$app_id)
+    {
+        $module = $this->service->move($id,$app_id);
+        return json_success($module);
+    }
+
     /**
      * 读取指定的分组
      *

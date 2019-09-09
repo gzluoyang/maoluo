@@ -70,6 +70,12 @@ class Button
         return json_success($button);
     }
 
+    public function move($id,$menu_id)
+    {
+        $button = $this->service->move($id,$menu_id);
+        return json_success($button);
+    }
+
     /**
      * 读取指定的按钮
      *

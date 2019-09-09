@@ -66,6 +66,15 @@ class Org
         return $app;
     }
 
+    public function move($id,$parent_id)
+    {
+        $org = $this->model->find($id);
+        $org['parent_id'] = $parent_id;
+        $org->save();
+        return $org;
+    }
+
+
    /**
      * 读取指定的资源
      *

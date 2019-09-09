@@ -69,6 +69,12 @@ class Access
         return json_success($access);
     }
 
+    public function move($id,$module_id)
+    {
+        $access = $this->service->move($id,$module_id);
+        return json_success($access);
+    }
+
     /**
      * 读取指定的访问
      *

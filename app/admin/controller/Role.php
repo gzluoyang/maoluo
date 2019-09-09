@@ -95,6 +95,12 @@ class Role
         return json_success($role);
     }
 
+    public function move($id,$parent_id)
+    {
+        $role = $this->service->move($id,$parent_id);
+        return json_success($role);
+    }
+
     /**
      * 读取指定的菜单
      *

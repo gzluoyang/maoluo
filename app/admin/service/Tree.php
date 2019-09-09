@@ -45,7 +45,7 @@ class Tree
         if($status === true)
             $where['status'] = 1;
 
-        $field = 'id,name as text';
+        $field = 'id,name as text,parent_id';
         if($checked === true)
         {
             $field = $field . ',false as checked';
@@ -207,7 +207,7 @@ class Tree
         if($status == true)
             $where['status'] = 1;
 
-        $list = $this->orgModel->where($where)->order('tab_index ASC')->field('id,name as text')->select();
+        $list = $this->orgModel->where($where)->order('tab_index ASC')->field('id,name as text,parent_id')->select();
         return $list;
     }
 

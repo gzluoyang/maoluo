@@ -70,7 +70,15 @@ class Access
         return $app;
     }
 
-   /**
+    public function move($id,$module_id)
+    {
+        $access = $this->model->find($id);
+        $access['module_id'] = $module_id;
+        $access->save();
+        return $access;
+    }
+
+    /**
      * 读取指定的资源
      *
      * @param  int  $id

@@ -75,6 +75,12 @@ class User
         return json_success($org);
     }
 
+    public function move($id,$org_id)
+    {
+        $user = $this->service->move($id,$org_id);
+        return json_success($user);
+    }
+
     /**
      * 读取指定的用户
      *

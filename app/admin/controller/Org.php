@@ -55,6 +55,12 @@ class Org
         return json_success($org);
     }
 
+    public function move($id,$parent_id)
+    {
+        $org = $this->service->move($id,$parent_id);
+        return json_success($org);
+    }
+
     /**
      * 读取指定的菜单
      *

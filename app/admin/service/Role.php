@@ -67,7 +67,15 @@ class Role
         return $app;
     }
 
-   /**
+    public function move($id,$parent_id)
+    {
+        $role = $this->model->find($id);
+        $role['parent_id'] = $parent_id;
+        $role->save();
+        return $role;
+    }
+
+    /**
      * 读取指定的资源
      *
      * @param  int  $id
