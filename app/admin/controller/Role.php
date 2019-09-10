@@ -101,6 +101,12 @@ class Role
         return json_success($role);
     }
 
+    public function sort($id,$tab_index,$dir = 'desc')
+    {
+        $this->service->sort($id,$tab_index,$dir);
+        return json_success();
+    }
+
     /**
      * 读取指定的菜单
      *

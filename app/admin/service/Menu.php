@@ -95,7 +95,32 @@ class Menu
         return $menu;
     }
 
-   /**
+    public function sort($id,$tab_index,$dir)
+    {
+        $menu = $this->model->find($id);
+        $menu['tab_index'] = $tab_index;
+        $menu->save();
+        $group_id = $menu['group_id'];
+        $this->sortAll($group_id,$dir);
+    }
+
+    public function sortAll($group_id,$dir)
+    {
+        $where = array(
+            'group_id' => $group_id
+        );
+        $list = $this->model->where($where)->order('tab_index asc, update_time ' . $dir)->select();
+
+        $i = 0;
+        foreach($list as $item)
+        {
+            $i++;
+            $item['tab_index'] = $i;
+            $item->save();
+        }
+    }
+
+    /**
      * 读取指定的资源
      *
      * @param  int  $id

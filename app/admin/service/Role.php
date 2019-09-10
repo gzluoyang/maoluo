@@ -75,6 +75,32 @@ class Role
         return $role;
     }
 
+    public function sort($id,$tab_index,$dir)
+    {
+        $role = $this->model->find($id);
+        $role['tab_index'] = $tab_index;
+        $role->save();
+
+        $parent_id = $role['parent_id'];
+        $this->sortAll($parent_id,$dir);
+    }
+
+    public function sortAll($parent_id,$dir)
+    {
+        $where = array(
+            'parent_id' => $parent_id
+        );
+        $list = $this->model->where($where)->order('tab_index asc, update_time ' . $dir)->select();
+
+        $i = 0;
+        foreach($list as $item)
+        {
+            $i++;
+            $item['tab_index'] = $i;
+            $item->save();
+        }
+    }
+
     /**
      * 读取指定的资源
      *

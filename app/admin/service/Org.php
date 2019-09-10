@@ -74,8 +74,33 @@ class Org
         return $org;
     }
 
+    public function sort($id,$tab_index,$dir)
+    {
+        $org = $this->model->find($id);
+        $org['tab_index'] = $tab_index;
+        $org->save();
 
-   /**
+        $parent_id = $org['parent_id'];
+        $this->sortAll($parent_id,$dir);
+    }
+
+    public function sortAll($parent_id,$dir)
+    {
+        $where = array(
+            'parent_id' => $parent_id
+        );
+        $list = $this->model->where($where)->order('tab_index asc, update_time ' . $dir)->select();
+
+        $i = 0;
+        foreach($list as $item)
+        {
+            $i++;
+            $item['tab_index'] = $i;
+            $item->save();
+        }
+    }
+
+    /**
      * 读取指定的资源
      *
      * @param  int  $id

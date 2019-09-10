@@ -78,6 +78,31 @@ class Access
         return $access;
     }
 
+    public function sort($id,$tab_index,$dir)
+    {
+        $access = $this->model->find($id);
+        $access['tab_index'] = $tab_index;
+        $access->save();
+        $module_id = $access['module_id'];
+        $this->sortAll($module_id,$dir);
+    }
+
+    public function sortAll($module_id,$dir)
+    {
+        $where = array(
+            'module_id' => $module_id
+        );
+        $list = $this->model->where($where)->order('tab_index asc, update_time ' . $dir)->select();
+
+        $i = 0;
+        foreach($list as $item)
+        {
+            $i++;
+            $item['tab_index'] = $i;
+            $item->save();
+        }
+    }
+
     /**
      * 读取指定的资源
      *

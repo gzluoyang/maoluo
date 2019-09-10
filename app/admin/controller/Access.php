@@ -75,6 +75,12 @@ class Access
         return json_success($access);
     }
 
+    public function sort($id,$tab_index,$dir = 'desc')
+    {
+        $this->service->sort($id,$tab_index,$dir);
+        return json_success();
+    }
+
     /**
      * 读取指定的访问
      *

@@ -76,6 +76,31 @@ class User
         return $user;
     }
 
+    public function sort($id,$tab_index,$dir)
+    {
+        $user = $this->model->find($id);
+        $user['tab_index'] = $tab_index;
+        $user->save();
+        $org_id = $user['org_id'];
+        $this->sortAll($org_id,$dir);
+    }
+
+    public function sortAll($org_id,$dir)
+    {
+        $where = array(
+            'org_id' => $org_id
+        );
+        $list = $this->model->where($where)->order('tab_index asc, update_time ' . $dir)->select();
+
+        $i = 0;
+        foreach($list as $item)
+        {
+            $i++;
+            $item['tab_index'] = $i;
+            $item->save();
+        }
+    }
+
    /**
      * 读取指定的资源
      *

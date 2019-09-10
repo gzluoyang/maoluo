@@ -61,8 +61,14 @@ class Group
 
     public function move($id,$app_id)
     {
-        $group = $this->service->move($id,$app_id);
-        return json_success($group);
+        $this->service->move($id,$app_id);
+        return json_success();
+    }
+
+    public function sort($id,$tab_index,$dir = 'desc')
+    {
+        $this->service->sort($id,$tab_index,$dir);
+        return json_success();
     }
 
     /**

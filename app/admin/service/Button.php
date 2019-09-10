@@ -78,6 +78,31 @@ class Button
         return $button;
     }
 
+    public function sort($id,$tab_index,$dir)
+    {
+        $button = $this->model->find($id);
+        $button['tab_index'] = $tab_index;
+        $button->save();
+        $menu_id = $button['menu_id'];
+        $this->sortAll($menu_id,$dir);
+    }
+
+    public function sortAll($menu_id,$dir)
+    {
+        $where = array(
+            'menu_id' => $menu_id
+        );
+        $list = $this->model->where($where)->order('tab_index asc, update_time ' . $dir)->select();
+
+        $i = 0;
+        foreach($list as $item)
+        {
+            $i++;
+            $item['tab_index'] = $i;
+            $item->save();
+        }
+    }
+
     /**
      * 读取指定的资源
      *

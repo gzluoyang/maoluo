@@ -81,6 +81,12 @@ class User
         return json_success($user);
     }
 
+    public function sort($id,$tab_index,$dir = 'desc')
+    {
+        $this->service->sort($id,$tab_index,$dir);
+        return json_success();
+    }
+
     /**
      * 读取指定的用户
      *
