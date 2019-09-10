@@ -77,7 +77,28 @@ class App
         return $app;
     }
 
-   /**
+    public function sort($id,$tab_index,$dir)
+    {
+        $app = $this->model->find($id);
+        $app['tab_index'] = $tab_index;
+        $app->save();
+        $this->sortAll($dir);
+    }
+
+    public function sortAll($dir)
+    {
+        $list = $this->model->order('tab_index asc, update_time ' . $dir)->select();
+
+        $i = 0;
+        foreach($list as $item)
+        {
+            $i++;
+            $item['tab_index'] = $i;
+            $item->save();
+        }
+    }
+
+    /**
      * 读取指定的资源
      *
      * @param  int  $id
