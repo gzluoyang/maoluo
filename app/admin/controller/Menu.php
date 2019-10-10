@@ -105,4 +105,14 @@ class Menu
         return json_success();
     }
 
+    public function findButtons($menu_url)
+    {
+        $buttons = $this->service->findButtons($menu_url);
+        $list = array();
+        foreach($buttons as $button){
+            $keyword = $button['keyword'];
+            $list[$keyword] = true;
+        }
+        return json_success($list);
+    }
 }

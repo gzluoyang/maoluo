@@ -43,6 +43,17 @@ class Button
         return $list;
     }
 
+    public function findByMenuID($menu_id)
+    {
+        $where = array(
+            'menu_id' => $menu_id,
+            'status' => 1
+        );
+
+        $list = $this->model->where($where)->order('tab_index asc')->select();
+        return $list;
+    }
+
     /**
      * 保存新建的资源
      *
@@ -143,5 +154,4 @@ class Button
             throw $e;
         }
     }
-
 }

@@ -161,4 +161,14 @@ class Menu
         }
     }
 
+    public function findByMenuKey($menu_key)
+    {
+        $where = array(
+            'url' => $menu_key,
+            'status' => 1
+        );
+
+        $menu = $this->model->where($where)->find();
+        return $menu;
+    }
 }

@@ -8,18 +8,21 @@ use think\Exception;
 use app\admin\service\App as AppService;
 use app\admin\service\Group as groupService;
 use app\admin\service\Menu as MenuService;
+use app\admin\service\Button as ButtonService;
 
 class Home
 {
     protected $appSerivce = null;
     protected $groupService = null;
     protected $menuService = null;
+    protected $buttonService = null;
 
-    public function __construct(AppService $appService, GroupService $groupService, MenuService $menuService)
+    public function __construct(AppService $appService, GroupService $groupService, MenuService $menuService, ButtonService $buttonService)
     {
         $this->appService = $appService;
         $this->groupService = $groupService;
         $this->menuService = $menuService;
+        $this->buttonService = $buttonService;
     }
 
     /**
@@ -47,5 +50,13 @@ class Home
             }
         }
         return json($groups);
+    }
+
+    public function buttons($menu_key, Request $request)
+    {
+        $menu = $this->menuService->findByMenuKey($menu_key);
+        $menu_id = $menu['id'];
+        $list = $this->buttonService->findByMenuID($menu_id);
+        return json_success($list);
     }
 }

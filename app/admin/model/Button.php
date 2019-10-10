@@ -10,6 +10,7 @@ class Button extends Model
         'id'          => 'int',
         'menu_id'     => 'int',
         'title'       => 'string',
+        'keyword'     => 'string',
         'url'         => 'string',
         'icon'        => 'string',
         'icon_cls'    => 'string',
