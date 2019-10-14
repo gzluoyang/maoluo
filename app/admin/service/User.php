@@ -16,6 +16,29 @@ class User
         $this->model = $model;
     }
 
+    public function login($username,$password)
+    {
+        $msg = '账号或密码错误!';
+
+        $where = array(
+            'username' => $username
+        );
+
+        $user = $this->model->where($where)->find();
+        if(empty($user))
+        {
+            //throw new Exception($msg);
+        }
+
+        $pwd = $user['password'];
+        if($pwd !== md5($password))
+        {
+            //throw new Exception($msg);
+        }
+
+        return $user;
+    }
+
     /**
      * 显示资源列表
      *

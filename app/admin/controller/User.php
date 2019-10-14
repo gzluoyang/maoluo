@@ -3,6 +3,7 @@
 namespace app\admin\controller;
 
 use think\Request;
+use think\facade\Session;
 
 use app\admin\service\User as UserService;
 
@@ -22,7 +23,24 @@ class User
      */
     public function login($username,$password)
     {
-        $this->service->login($username,$password);
+        $user = $this->service->login($username,$password);
+        session('user.id',$user['id']);
+        return json_success();
+    }
+
+    public function logout()
+    {
+        session('user.id',null);
+        return json_success();
+    }
+
+    public function checkLogin()
+    {
+        if(!session('?user.id'))
+        {
+            throw new Exception('用户还未登录,或登录超时!');
+        }
+
         return json_success();
     }
 

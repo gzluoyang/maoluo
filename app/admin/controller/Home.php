@@ -34,6 +34,15 @@ class Home
         return json($list);
     }
 
+    public function isLogin()
+    {
+        if(!session('?user.id'))
+        {
+            throw new Exception('用户还未登录,或登录超时!');
+        }
+        return json_success();
+    }
+
     public function menus($app_id, Request $request)
     {
         $groups = $this->groupService->findAllEnabledByAppID($app_id);
