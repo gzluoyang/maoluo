@@ -25,15 +25,6 @@ class Home
         $this->buttonService = $buttonService;
     }
 
-    /**
-     * 显示所有可用的应用
-     */
-    public function apps(Request $request)
-    {
-        $list = $this->appService->findAllEnabled();
-        return json($list);
-    }
-
     public function isLogin()
     {
         if(!session('?user.id'))
@@ -43,29 +34,77 @@ class Home
         return json_success();
     }
 
+    /**
+     * 显示所有可用的应用
+     */
+    public function apps(Request $request)
+    {
+        $user_id = session('user.id');
+        $key = 'topmenu_' . $user_id;
+        $val = cache($key);
+        if(empty($val))
+        {
+            $list = $this->appService->findAllEnabled();
+            $val = json_encode($list);
+            cache($key, $val, 7200);
+            return json($list);
+        }
+        else
+        {
+            $list = json_decode($val,true);
+            return json($list);
+        }
+    }
+
     public function menus($app_id, Request $request)
     {
-        $groups = $this->groupService->findAllEnabledByAppID($app_id);
-        if(!empty($groups) && sizeof($groups) > 0)
+        $user_id = session('user.id');
+        $key = $app_id . '_' . $user_id;
+        $val = cache($key);
+        if(empty($val))
         {
-            foreach($groups as &$group)
+            $groups = $this->groupService->findAllEnabledByAppID($app_id);
+            if(!empty($groups) && sizeof($groups) > 0)
             {
-                $group_id = $group['id'];
-                $menus = $this->menuService->findAllEnabledByGroupID($group_id);
-                if(!empty($menus) && sizeof($menus) > 0)
+                foreach($groups as &$group)
                 {
-                    $group['children'] = $menus;
+                    $group_id = $group['id'];
+                    $menus = $this->menuService->findAllEnabledByGroupID($group_id);
+                    if(!empty($menus) && sizeof($menus) > 0)
+                    {
+                        $group['children'] = $menus;
+                    }
                 }
             }
+            $val = json_encode($groups);
+            cache($key, $val, 7200);
+            return json($groups);
         }
-        return json($groups);
+        else
+        {
+            $groups = json_decode($val,true);
+            return json($groups);
+        }
     }
 
     public function buttons($menu_key, Request $request)
     {
-        $menu = $this->menuService->findByMenuKey($menu_key);
-        $menu_id = $menu['id'];
-        $list = $this->buttonService->findByMenuID($menu_id);
-        return json_success($list);
+        $user_id = session('user.id');
+        $key = $menu_key . '_' . $user_id;
+        $val = cache($key);
+        if(empty($val))
+        {
+            $menu = $this->menuService->findByMenuKey($menu_key);
+            $menu_id = $menu['id'];
+            $list = $this->buttonService->findByMenuID($menu_id);
+            $val = json_encode($list);
+            cache($key, $val, 7200);
+            return json_success($list);
+        }
+        else
+        {
+            $list = json_decode($val,true);
+            return json_success($list);
+        }
     }
 }
