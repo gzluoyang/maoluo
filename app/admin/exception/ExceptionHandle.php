@@ -4,10 +4,11 @@ namespace app\admin\exception;
 use Throwable;
 use think\exception\Handle;
 use think\Exception;
+use think\Response;
 
 class ExceptionHandle extends Handle
 {
-    public function render($request, Throwable $e)
+    public function render($request, Throwable $e) : Response
     {
         // 请求异常
         if ($e instanceof Exception) {

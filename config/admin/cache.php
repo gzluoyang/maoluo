@@ -13,15 +13,5 @@
 // | 缓存设置
 // +----------------------------------------------------------------------
 return [
-    'default' => 'redis',
-    'stores' => [
-        'file' => [
-            'type' => 'file',
-            'path' => '../runtime/file/'
-        ],
-        'redis' => [
-            'type' => 'redis',
-            'host' => '127.0.0.1'
-        ]
-    ]
+    'default' => 'redis'
 ];

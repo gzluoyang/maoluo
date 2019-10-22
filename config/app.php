@@ -16,6 +16,7 @@
 use think\facade\Env;
 
 return [
+    'auto_multi_app'   => true,
     // 应用地址
     'app_host'              => Env::get('app.host', ''),
     // 应用Trace（环境变量优先读取）

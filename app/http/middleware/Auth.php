@@ -4,9 +4,10 @@ namespace app\http\middleware;
 
 class Auth
 {
-    public function handle($request, \Closure $next, $key)
+    public function handle($request, \Closure $next)
     {
-        //echo $key;
+        $uid = session('user.id');
+        $path = $request->root() . '/' . $request->path();
         return $next($request);
     }
 }

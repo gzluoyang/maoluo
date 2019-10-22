@@ -4,6 +4,7 @@ namespace app\admin\controller;
 
 use think\Request;
 use think\Exception;
+use think\facade\Cache;
 
 use app\admin\service\App as AppService;
 use app\admin\service\Group as groupService;
@@ -32,6 +33,19 @@ class Home
             throw new Exception('用户还未登录,或登录超时!');
         }
         return json_success();
+    }
+
+    public function test()
+    {
+        session('test','hai');
+        return json_success();
+    }
+
+    public function ok()
+    {
+        $str = session('?test');
+        echo $str;
+        return json_success(null,$str);
     }
 
     /**
@@ -106,5 +120,11 @@ class Home
             $list = json_decode($val,true);
             return json_success($list);
         }
+    }
+
+    public function clearCache()
+    {
+        Cache::clear();
+        return json_success();
     }
 }
