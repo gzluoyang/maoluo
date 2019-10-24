@@ -39,7 +39,7 @@ class Tree
         $this->userModel = $userModel;
     }
 
-    public function role($parent_id,$user_id = null,$access_id = null,$menu_id = null,$button_id = null,$status = true,$checked = false)
+    public function role($parent_id,$user_id = null,$access_id = null,$app_id = null,$menu_id = null,$button_id = null,$status = true,$checked = false)
     {
         $where = ['parent_id' => $parent_id];
         if($status === true)
@@ -99,6 +99,28 @@ class Tree
                 }
             }
 
+            if(!empty($app_id))
+            {
+                $app = $this->appModel->find($app_id);
+                $roles = $app->roles;
+                if(!empty($roles))
+                {
+                    $arr = [];
+                    foreach($roles as $role)
+                    {
+                        $arr[] = $role['id'];
+                    }
+
+                    $n = count($list);
+                    foreach($list as &$item)
+                    {
+                        $item['checked'] = false;
+                        if(in_array($item['id'],$arr))
+                            $item['checked'] = true;
+                    }
+                }
+            }
+
             if(!empty($menu_id))
             {
                 $menu = $this->menuModel->find($menu_id);
@@ -120,6 +142,7 @@ class Tree
                     }
                 }
             }
+
 
             if(!empty($button_id))
             {

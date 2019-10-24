@@ -17,7 +17,6 @@ class Role extends Model
         'update_time' => 'int',
     ];
 
-   //
     public function users()
     {
         return $this->belongsToMany('User','user_role');
@@ -26,6 +25,11 @@ class Role extends Model
     public function accesses()
     {
         return $this->belongsToMany('Access','access_role');
+    }
+
+    public function apps()
+    {
+        return $this->belongsToMany('App','app_role');
     }
 
     public function menus()

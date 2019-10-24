@@ -32,9 +32,9 @@ class Tree
         return json_success($list);
     }
 
-    public function role($parent_id,$user_id = null,$access_id = null,$menu_id = null,$button_id = null,$status = true,$checked = false)
+    public function role($parent_id,$user_id = null,$access_id = null,$app_id = null,$menu_id = null,$button_id = null,$status = true,$checked = false)
     {
-        $list = $this->service->role($parent_id,$user_id,$access_id,$menu_id,$button_id,str2bool($status,true),str2bool($checked,false));
+        $list = $this->service->role($parent_id,$user_id,$access_id,$app_id,$menu_id,$button_id,str2bool($status,true),str2bool($checked,false));
         return json_success($list);
     }
 

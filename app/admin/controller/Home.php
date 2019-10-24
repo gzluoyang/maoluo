@@ -35,19 +35,6 @@ class Home
         return json_success();
     }
 
-    public function test()
-    {
-        session('test','hai');
-        return json_success();
-    }
-
-    public function ok()
-    {
-        $str = session('?test');
-        echo $str;
-        return json_success(null,$str);
-    }
-
     /**
      * 显示所有可用的应用
      */

@@ -28,4 +28,9 @@ class App extends Model
     {
         return $this->hasMany('Group');
     }
+
+    public function roles()
+    {
+        return $this->belongsToMany('Role');
+    }
 }

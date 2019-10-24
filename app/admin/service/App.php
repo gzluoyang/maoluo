@@ -2,6 +2,9 @@
 
 namespace app\admin\service;
 
+use think\Exception;
+use think\facade\Db;
+
 use app\admin\model\App as AppModel;
 
 class App
@@ -120,5 +123,22 @@ class App
         //
         $app = $this->model->find($id);
         $app->delete();
+    }
+
+    public function setRoles($app_id,$roles)
+    {
+        $app = $this->model->find($app_id);
+        Db::startTrans();
+        try
+        {
+            $app->roles()->detach();
+            $app->roles()->saveAll($roles);
+            Db::commit();
+        }
+        catch(Exception $e)
+        {
+            Db::rollback();
+            throw $e;
+        }
     }
 }
