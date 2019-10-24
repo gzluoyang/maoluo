@@ -24,19 +24,19 @@ class User
     public function login($username,$password)
     {
         $user = $this->service->login($username,$password);
-        session('user.id',$user['id']);
+        session('user_id',$user['id']);
         return json_success();
     }
 
     public function logout()
     {
-        session('user.id',null);
+        session('user_id',null);
         return json_success();
     }
 
     public function checkLogin()
     {
-        if(!session('?user.id'))
+        if(!session('?user_id'))
         {
             throw new Exception('用户还未登录,或登录超时!');
         }

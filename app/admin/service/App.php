@@ -6,6 +6,7 @@ use think\Exception;
 use think\facade\Db;
 
 use app\admin\model\App as AppModel;
+use app\admin\service\Role as RoleService;
 
 class App
 {
@@ -38,6 +39,13 @@ class App
         }
 
         return $list;
+    }
+
+    public function findByUserID($user_id)
+    {
+        $tag = tag($user_id);
+        $roles = Cache::tag($tag)->remember($key,function() {
+        });
     }
 
     /**

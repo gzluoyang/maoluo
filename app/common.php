@@ -70,3 +70,30 @@ function str2bool($val,$default)
     return $default;
 }
 
+function tag($user_id)
+{
+    return 'user:' . $user_id;
+}
+
+function user_apps_key($user_id)
+{
+    $tag = tag($user_id);
+    return $tag . '_apps';
+}
+
+function user_roles_key($user_id)
+{
+    $tag = tag($user_id);
+    return $tag . '_roles';
+}
+
+function all_apps_key()
+{
+    return 'apps';
+}
+
+function role_apps_key($role_id)
+{
+    return 'role:' . $role_id . '_apps';
+}
+

@@ -10,6 +10,7 @@ use app\admin\service\App as AppService;
 use app\admin\service\Group as groupService;
 use app\admin\service\Menu as MenuService;
 use app\admin\service\Button as ButtonService;
+use app\admin\service\CacheService;
 
 class Home
 {
@@ -17,18 +18,20 @@ class Home
     protected $groupService = null;
     protected $menuService = null;
     protected $buttonService = null;
+    protected $cacheService = null;
 
-    public function __construct(AppService $appService, GroupService $groupService, MenuService $menuService, ButtonService $buttonService)
+    public function __construct(AppService $appService, GroupService $groupService, MenuService $menuService, ButtonService $buttonService, CacheService $cacheService)
     {
         $this->appService = $appService;
         $this->groupService = $groupService;
         $this->menuService = $menuService;
         $this->buttonService = $buttonService;
+        $this->cacheService = $cacheService;
     }
 
     public function isLogin()
     {
-        if(!session('?user.id'))
+        if(!session('?user_id'))
         {
             throw new Exception('用户还未登录,或登录超时!');
         }
@@ -40,26 +43,15 @@ class Home
      */
     public function apps(Request $request)
     {
-        $user_id = session('user.id');
-        $key = 'topmenu_' . $user_id;
-        $val = cache($key);
-        if(empty($val))
-        {
-            $list = $this->appService->findAllEnabled();
-            $val = json_encode($list);
-            cache($key, $val, 7200);
-            return json($list);
-        }
-        else
-        {
-            $list = json_decode($val,true);
-            return json($list);
-        }
+        $user_id = session('user_id');
+        $list = $this->cacheService->getAppsByUserID($user_id);
+
+        return json($list);
     }
 
     public function menus($app_id, Request $request)
     {
-        $user_id = session('user.id');
+        $user_id = session('user_id');
         $key = $app_id . '_' . $user_id;
         $val = cache($key);
         if(empty($val))
@@ -90,7 +82,7 @@ class Home
 
     public function buttons($menu_key, Request $request)
     {
-        $user_id = session('user.id');
+        $user_id = session('user_id');
         $key = $menu_key . '_' . $user_id;
         $val = cache($key);
         if(empty($val))

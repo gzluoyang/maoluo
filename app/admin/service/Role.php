@@ -193,4 +193,8 @@ class Role
         }
     }
 
+    public function getRolesByUserID($user_id)
+    {
+
+    }
 }
