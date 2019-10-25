@@ -97,3 +97,45 @@ function role_apps_key($role_id)
     return 'role:' . $role_id . '_apps';
 }
 
+function user_menus_key($user_id, $app_id)
+{
+    $tag = tag($user_id);
+    return $tag . '_app:' . $app_id . '_menus';
+}
+
+function all_groups_key($app_id)
+{
+    return 'app:' . $app_id . '_groups';
+}
+
+function all_submenus_key($group_id)
+{
+    return 'group:' . $group_id . '_menus';
+}
+
+function menu_key($menu_key)
+{
+    return 'menu_key:' . $menu_key;
+}
+
+function user_buttons_key($user_id, $menu_id)
+{
+    $tag = tag($user_id);
+    return $tag . '_menu:' . $menu_id . '_buttons';
+}
+
+function role_menus_key($role_id)
+{
+    return 'role:' . $role_id . '_menus';
+}
+
+function all_buttons_key($menu_id)
+{
+    return 'menu:' . $menu_id . '_buttons';
+}
+
+function role_buttons_key($role_id)
+{
+    return 'role:' . $role_id . '_buttons';
+}
+

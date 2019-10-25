@@ -52,37 +52,24 @@ class Home
     public function menus($app_id, Request $request)
     {
         $user_id = session('user_id');
-        $key = $app_id . '_' . $user_id;
-        $val = cache($key);
-        if(empty($val))
-        {
-            $groups = $this->groupService->findAllEnabledByAppID($app_id);
-            if(!empty($groups) && sizeof($groups) > 0)
-            {
-                foreach($groups as &$group)
-                {
-                    $group_id = $group['id'];
-                    $menus = $this->menuService->findAllEnabledByGroupID($group_id);
-                    if(!empty($menus) && sizeof($menus) > 0)
-                    {
-                        $group['children'] = $menus;
-                    }
-                }
-            }
-            $val = json_encode($groups);
-            cache($key, $val, 7200);
-            return json($groups);
-        }
-        else
-        {
-            $groups = json_decode($val,true);
-            return json($groups);
-        }
+        $list = $this->cacheService->getMenusByUserID($user_id, $app_id);
+
+        return json($list);
     }
 
     public function buttons($menu_key, Request $request)
     {
         $user_id = session('user_id');
+
+        $key = menu_key($menu_key);
+        $menu_id = Cache::remember($key, function() use($menu_key) {
+            $menu = $this->menuService->findByMenuKey($menu_key);
+            return $menu['id'];
+        });
+
+        $list = $this->cacheService->getButtonsByUserID($user_id, $menu_id);
+        return json_success($list);
+        /*
         $key = $menu_key . '_' . $user_id;
         $val = cache($key);
         if(empty($val))
@@ -99,6 +86,7 @@ class Home
             $list = json_decode($val,true);
             return json_success($list);
         }
+        */
     }
 
     public function clearCache()

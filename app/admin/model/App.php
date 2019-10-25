@@ -9,6 +9,7 @@ class App extends Model
     protected $schema = [
         'id'          => 'int',
         'title'       => 'string',
+        'home'        => 'string',
         'icon'        => 'string',
         'icon_cls'    => 'string',
         'tab_index'   => 'int',
