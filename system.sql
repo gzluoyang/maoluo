@@ -27,6 +27,7 @@ CREATE TABLE `sys_access` (
   `module_id` int(10) unsigned NOT NULL COMMENT '应用ID',
   `title` varchar(64) NOT NULL COMMENT '标题',
   `url` varchar(128) NOT NULL COMMENT 'URL',
+  `is_auth` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '是否需要认证',
   `tab_index` tinyint(4) unsigned NOT NULL COMMENT 'TAB排序',
   `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '状态',
   `memo` varchar(128) DEFAULT NULL COMMENT '备注',
@@ -37,7 +38,7 @@ CREATE TABLE `sys_access` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNI_SYS_ACCESS_URL` (`url`) USING BTREE,
   KEY `IDX_SYS_ACCESS_APP_ID_TAB_INDEX_STATUS` (`module_id`,`tab_index`,`status`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COMMENT='访问表';
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COMMENT='访问表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -46,7 +47,7 @@ CREATE TABLE `sys_access` (
 
 LOCK TABLES `sys_access` WRITE;
 /*!40000 ALTER TABLE `sys_access` DISABLE KEYS */;
-INSERT INTO `sys_access` VALUES (3,2,'access1','test',1,1,'',0,1562857252,0,1568112299),(4,2,'access2','access2',2,1,'',0,1564045306,0,1568112299),(5,2,'access3','3',3,0,'',0,1568112229,0,1568112298),(7,2,'access4','4',4,0,'',0,1568112260,0,1568112295);
+INSERT INTO `sys_access` VALUES (3,1,'新增应用','/admin/app/create',1,3,1,'',0,1562857252,0,1572251373),(4,1,'修改应用','/admin/app/update',1,4,1,'',0,1564045306,0,1572251373),(5,1,'删除应用','/admin/app/delete',1,5,1,'',0,1568112229,0,1572251373),(7,1,'设置角色','/admin/app/roles',1,6,1,'',0,1568112260,0,1572251373),(8,10,'用户登录','/admin/user/login',0,2,1,'',0,1572174114,0,1572199742),(9,10,'退出系统','/admin/user/logout',0,1,1,'',0,1572174178,0,1572199738),(10,10,'是否登录','/admin/home/isLogin',0,3,1,'',0,1572174219,0,1572237106),(14,10,'应用树','/admin/tree/app',0,7,1,'',0,1572236034,0,1572236737),(15,10,'菜单列表','/admin/home/menus',0,5,1,'',0,1572236130,0,1572236748),(16,10,'按钮列表','/admin/home/buttons',0,6,1,'',0,1572236389,0,1572236737),(17,10,'模块树','/admin/tree/module',0,8,1,'',0,1572236472,0,1572236737),(21,10,'应用列表','/admin/home/apps',0,4,1,'',0,1572236723,0,1572236737),(22,10,'分组树','/admin/tree/group',0,9,1,'',0,1572236936,0,1572236951),(23,10,'菜单树','/admin/tree/menu',0,10,1,'',0,1572237003,0,1572237007),(24,10,'角色树','/admin/tree/role',0,11,1,'',0,1572237086,0,1572237089),(25,10,'机构树','/admin/tree/org',0,12,1,'',0,1572237154,0,1572237160),(26,1,'查询应用','/admin/app/index',1,1,1,'',0,1572251146,0,1572251371),(27,1,'读取应用','/admin/app/read',1,2,1,'',0,1572251346,0,1572251373);
 /*!40000 ALTER TABLE `sys_access` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -69,7 +70,7 @@ CREATE TABLE `sys_access_role` (
 
 LOCK TABLES `sys_access_role` WRITE;
 /*!40000 ALTER TABLE `sys_access_role` DISABLE KEYS */;
-INSERT INTO `sys_access_role` VALUES (3,3),(3,5),(4,1),(4,2);
+INSERT INTO `sys_access_role` VALUES (4,2),(13,2),(13,3),(3,2),(26,1),(27,1),(3,1),(4,1),(5,1),(7,1);
 /*!40000 ALTER TABLE `sys_access_role` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -83,6 +84,7 @@ DROP TABLE IF EXISTS `sys_app`;
 CREATE TABLE `sys_app` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `title` varchar(64) NOT NULL COMMENT '标题',
+  `home` varchar(32) NOT NULL COMMENT '主页',
   `icon` varchar(64) DEFAULT NULL COMMENT '图标',
   `icon_cls` varchar(64) DEFAULT NULL COMMENT '图标样式',
   `tab_index` tinyint(4) unsigned NOT NULL DEFAULT '0' COMMENT 'TAB排序',
@@ -95,7 +97,7 @@ CREATE TABLE `sys_app` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNI_SYS_APP_TITLE` (`title`) USING BTREE,
   KEY `IDX_SYS_APP_TAB_INDEX_STATUS` (`tab_index`,`status`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8mb4 COMMENT='应用表';
+) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8mb4 COMMENT='应用表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -104,8 +106,31 @@ CREATE TABLE `sys_app` (
 
 LOCK TABLES `sys_app` WRITE;
 /*!40000 ALTER TABLE `sys_app` DISABLE KEYS */;
-INSERT INTO `sys_app` VALUES (40,'自营电商','','x-fa fa-cube',2,1,'自营电商是由平台自己经营商品或服务的网上销售平台。',0,1558431657,0,1568128309),(41,'系统应用','','x-fa fa-cogs',1,1,'管理平台的基础信息，如用户、权限、模块、菜单等',0,1558432428,0,1568123721),(45,'商户电商','','x-fa fa-cubes',3,1,'商户电商是由商家自己管理、推广、销售的商品交易平台。',0,1558604961,0,1568128309);
+INSERT INTO `sys_app` VALUES (40,'素质教育','','','x-fa fa-graduation-cap',2,1,'自营电商是由平台自己经营商品或服务的网上销售平台。',0,1558431657,0,1571946543),(41,'系统应用','dashboard','','x-fa fa-cogs',1,1,'管理平台的基础信息，如用户、权限、模块、菜单等',0,1558432428,0,1572255995),(45,'商户电商','','','x-fa fa-cubes',3,1,'商户电商是由商家自己管理、推广、销售的商品交易平台。',0,1558604961,0,1571581216);
 /*!40000 ALTER TABLE `sys_app` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sys_app_role`
+--
+
+DROP TABLE IF EXISTS `sys_app_role`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sys_app_role` (
+  `app_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `role_id` int(10) unsigned NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `sys_app_role`
+--
+
+LOCK TABLES `sys_app_role` WRITE;
+/*!40000 ALTER TABLE `sys_app_role` DISABLE KEYS */;
+INSERT INTO `sys_app_role` VALUES (40,1),(40,2),(41,1);
+/*!40000 ALTER TABLE `sys_app_role` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -132,7 +157,7 @@ CREATE TABLE `sys_button` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNI_SYS_BUTTON_MENU_ID_TITLE` (`menu_id`,`title`) USING BTREE,
   KEY `IDX_SYS_BUTTON_MENU_ID_TAB_INDEX_STATUS` (`menu_id`,`tab_index`,`status`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8mb4 COMMENT='工具栏按钮表';
+) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8mb4 COMMENT='工具栏按钮表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -141,7 +166,7 @@ CREATE TABLE `sys_button` (
 
 LOCK TABLES `sys_button` WRITE;
 /*!40000 ALTER TABLE `sys_button` DISABLE KEYS */;
-INSERT INTO `sys_button` VALUES (1,1,'apps_add','新增','','fa fa-lg fa-plus-circle',1,1,'',0,1562824023,0,1570764645),(2,1,'apps_edit','修改','','fa fa-lg fa-edit',2,1,'',0,1562833411,0,1570698594),(3,1,'apps_del','删除','','fa fa-lg fa-times-circle',3,1,'',0,1568112048,0,1570698670),(4,1,'apps_split1','-','','',4,1,'',0,1568112055,0,1570700133),(5,4,'menus_add','新增','','fa fa-lg fa-plus-circle',1,1,'',0,1570764746,0,1570764746),(6,4,'menus_edit','修改','','fa fa-lg fa-edit',2,1,'',0,1570765190,0,1570765190),(7,4,'menus_del','删除','','fa fa-lg fa-times-circle',3,1,'',0,1570765374,0,1570765374),(8,4,'menus_split1','分隔线1','','',4,1,'',0,1570765617,0,1570766795),(9,4,'menus_role','角色','','fa fa-lg fa-user',5,1,'',0,1570765665,0,1570788222),(11,4,'menus_split2','分隔线2','','',6,1,'',0,1570766777,0,1570788247),(12,3,'groups_add','新增','','fa fa-lg fa-plus-circle',1,1,'',0,1570778226,0,1570778317),(13,3,'groups_edit','修改','','fa fa-lg fa-edit',2,1,'',0,1570778253,0,1570778317),(14,3,'groups_del','删除','','fa fa-lg fa-times-circle',3,1,'',0,1570778275,0,1570778317),(15,3,'groups_split1','分割线1','','',4,1,'',0,1570778299,0,1570778312),(16,5,'buttons_add','新增','','fa fa-lg fa-plus-circle',1,1,'',0,1570778596,0,1570778718),(17,5,'buttons_edit','修改','','fa fa-lg fa-edit',2,1,'',0,1570778615,0,1570778718),(18,5,'buttons_del','删除','','fa fa-lg fa-times-circle',3,1,'',0,1570778634,0,1570778718),(19,5,'buttons_split1','分隔符1','','',4,1,'',0,1570778654,0,1570778718),(20,5,'buttons_role','角色','','fa fa-lg fa-user',5,1,'',0,1570778681,0,1570790478),(21,5,'buttons_split2','分隔符2','','',6,1,'',0,1570778706,0,1570778718),(22,7,'modules_add','新增','','fa fa-lg fa-plus-circle',1,1,'',0,1570791449,0,1570791532),(23,7,'modules_edit','修改','','fa fa-lg fa-edit',2,1,'',0,1570791469,0,1570791532),(24,7,'modules_del','删除','','fa fa-lg fa-times-circle',3,1,'',0,1570791486,0,1570791532),(25,7,'modules_split1','分隔符1','','',4,1,'',0,1570791508,0,1570791532),(26,8,'accesses_add','新增','','fa fa-lg fa-plus-circle',1,1,'',0,1570792312,0,1570792430),(27,8,'accesses_edit','修改','','fa fa-lg fa-edit',2,1,'',0,1570792330,0,1570792430),(28,8,'accesses_del','删除','','fa fa-lg fa-times-circle',3,1,'',0,1570792353,0,1570792430),(29,8,'accesses_split1','分隔符1','','',4,1,'',0,1570792373,0,1570792430),(30,8,'accesses_role','角色','','fa fa-lg fa-user',5,1,'',0,1570792402,0,1570792430),(31,8,'accesses_split2','分隔符2','','',6,1,'',0,1570792425,0,1570792430),(32,9,'roles_add','新增','','fa fa-lg fa-plus-circle',1,1,'',0,1570802644,0,1570802712),(33,9,'roles_edit','修改','','fa fa-lg fa-edit',2,1,'',0,1570802663,0,1570802712),(34,9,'roles_del','删除','','fa fa-lg fa-times-circle',3,1,'',0,1570802679,0,1570802712),(35,9,'roles_split1','分隔符1','','',4,1,'',0,1570802697,0,1570802712),(36,9,'roles_user','用户','','fa fa-lg fa-users',5,1,'',0,1570802785,0,1570803196),(37,9,'roles_access','访问','','fa fa-lg fa-cloud-upload',6,1,'',0,1570802880,0,1570802883),(38,9,'roles_menu','菜单','','fa fa-lg fa-list-ul',8,1,'',0,1570802926,0,1570802950),(39,9,'roles_split2','分隔符2','','',7,1,'',0,1570802947,0,1570802950),(40,9,'roles_button','按钮','','fa fa-lg fa-hand-pointer-o',9,1,'',0,1570803002,0,1570803010),(41,9,'roles_split3','分隔符3','','',10,1,'',0,1570803034,0,1570803038),(42,2,'orgs_add','新增','','fa fa-lg fa-plus-circle',1,1,'',0,1570803852,0,1570803930),(43,2,'orgs_edit','修改','','fa fa-lg fa-edit',2,1,'',0,1570803880,0,1570804000),(44,2,'orgs_del','删除','','fa fa-lg fa-times-circle',3,1,'',0,1570803899,0,1570803930),(45,2,'orgs_split1','分隔符1','','',4,1,'',0,1570803922,0,1570803930),(46,6,'users_add','新增','','fa fa-lg fa-plus-circle',1,1,'',0,1570804846,0,1570804953),(47,6,'users_edit','修改','','fa fa-lg fa-edit',2,1,'',0,1570804874,0,1570804953),(48,6,'users_del','删除','','fa fa-lg fa-times-circle',3,1,'',0,1570804889,0,1570804953),(49,6,'users_split1','分隔符1','','',4,1,'',0,1570804909,0,1570804953),(50,6,'users_role','角色','','fa fa-lg fa-user',5,1,'',0,1570804944,0,1570804953),(51,6,'users_split2','分隔符2','','',6,1,'',0,1570804972,0,1570804976);
+INSERT INTO `sys_button` VALUES (1,1,'apps_add','新增','','fa fa-lg fa-plus-circle',1,1,'',0,1562824023,0,1570764645),(2,1,'apps_edit','修改','','fa fa-lg fa-edit',2,1,'',0,1562833411,0,1570698594),(3,1,'apps_del','删除','','fa fa-lg fa-times-circle',3,1,'',0,1568112048,0,1570698670),(4,1,'apps_split1','分隔线1','','',4,1,'',0,1568112055,0,1571797774),(5,4,'menus_add','新增','','fa fa-lg fa-plus-circle',1,1,'',0,1570764746,0,1570764746),(6,4,'menus_edit','修改','','fa fa-lg fa-edit',2,1,'',0,1570765190,0,1570765190),(7,4,'menus_del','删除','','fa fa-lg fa-times-circle',3,1,'',0,1570765374,0,1570765374),(8,4,'menus_split1','分隔线1','','',4,1,'',0,1570765617,0,1570766795),(9,4,'menus_role','角色','','fa fa-lg fa-user',5,1,'',0,1570765665,0,1570788222),(11,4,'menus_split2','分隔线2','','',6,1,'',0,1570766777,0,1570788247),(12,3,'groups_add','新增','','fa fa-lg fa-plus-circle',1,1,'',0,1570778226,0,1570778317),(13,3,'groups_edit','修改','','fa fa-lg fa-edit',2,1,'',0,1570778253,0,1570778317),(14,3,'groups_del','删除','','fa fa-lg fa-times-circle',3,1,'',0,1570778275,0,1570778317),(15,3,'groups_split1','分割线1','','',4,1,'',0,1570778299,0,1570778312),(16,5,'buttons_add','新增','','fa fa-lg fa-plus-circle',1,1,'',0,1570778596,0,1570778718),(17,5,'buttons_edit','修改','','fa fa-lg fa-edit',2,1,'',0,1570778615,0,1570778718),(18,5,'buttons_del','删除','','fa fa-lg fa-times-circle',3,1,'',0,1570778634,0,1570778718),(19,5,'buttons_split1','分隔符1','','',4,1,'',0,1570778654,0,1570778718),(20,5,'buttons_role','角色','','fa fa-lg fa-user',5,1,'',0,1570778681,0,1570790478),(21,5,'buttons_split2','分隔符2','','',6,1,'',0,1570778706,0,1570778718),(22,7,'modules_add','新增','','fa fa-lg fa-plus-circle',1,1,'',0,1570791449,0,1570791532),(23,7,'modules_edit','修改','','fa fa-lg fa-edit',2,1,'',0,1570791469,0,1570791532),(24,7,'modules_del','删除','','fa fa-lg fa-times-circle',3,1,'',0,1570791486,0,1570791532),(25,7,'modules_split1','分隔符1','','',4,1,'',0,1570791508,0,1570791532),(26,8,'accesses_add','新增','','fa fa-lg fa-plus-circle',1,1,'',0,1570792312,0,1570792430),(27,8,'accesses_edit','修改','','fa fa-lg fa-edit',2,1,'',0,1570792330,0,1570792430),(28,8,'accesses_del','删除','','fa fa-lg fa-times-circle',3,1,'',0,1570792353,0,1570792430),(29,8,'accesses_split1','分隔符1','','',4,1,'',0,1570792373,0,1570792430),(30,8,'accesses_role','角色','','fa fa-lg fa-user',5,1,'',0,1570792402,0,1570792430),(31,8,'accesses_split2','分隔符2','','',6,1,'',0,1570792425,0,1570792430),(32,9,'roles_add','新增','','fa fa-lg fa-plus-circle',1,1,'',0,1570802644,0,1570802712),(33,9,'roles_edit','修改','','fa fa-lg fa-edit',2,1,'',0,1570802663,0,1570802712),(34,9,'roles_del','删除','','fa fa-lg fa-times-circle',3,1,'',0,1570802679,0,1570802712),(35,9,'roles_split1','分隔符1','','',4,1,'',0,1570802697,0,1570802712),(36,9,'roles_user','用户','','fa fa-lg fa-users',5,1,'',0,1570802785,0,1570803196),(37,9,'roles_access','访问','','fa fa-lg fa-cloud-upload',6,1,'',0,1570802880,0,1570802883),(38,9,'roles_menu','菜单','','fa fa-lg fa-list-ul',8,1,'',0,1570802926,0,1570802950),(39,9,'roles_split2','分隔符2','','',7,1,'',0,1570802947,0,1570802950),(40,9,'roles_button','按钮','','fa fa-lg fa-hand-pointer-o',9,1,'',0,1570803002,0,1570803010),(41,9,'roles_split3','分隔符3','','',10,1,'',0,1570803034,0,1570803038),(42,2,'orgs_add','新增','','fa fa-lg fa-plus-circle',1,1,'',0,1570803852,0,1570803930),(43,2,'orgs_edit','修改','','fa fa-lg fa-edit',2,1,'',0,1570803880,0,1570804000),(44,2,'orgs_del','删除','','fa fa-lg fa-times-circle',3,1,'',0,1570803899,0,1570803930),(45,2,'orgs_split1','分隔符1','','',4,1,'',0,1570803922,0,1570803930),(46,6,'users_add','新增','','fa fa-lg fa-plus-circle',1,1,'',0,1570804846,0,1570804953),(47,6,'users_edit','修改','','fa fa-lg fa-edit',2,1,'',0,1570804874,0,1570804953),(48,6,'users_del','删除','','fa fa-lg fa-times-circle',3,1,'',0,1570804889,0,1570804953),(49,6,'users_split1','分隔符1','','',4,1,'',0,1570804909,0,1570804953),(50,6,'users_role','角色','','fa fa-lg fa-user',5,1,'',0,1570804944,0,1570804953),(51,6,'users_split2','分隔符2','','',6,1,'',0,1570804972,0,1570804976),(52,1,'apps_role','角色','','fa fa-lg fa-user',5,1,'',0,1571797758,0,1571797774),(53,1,'apps_split2','分隔线2','','',6,1,'',0,1571797802,0,1571797807);
 /*!40000 ALTER TABLE `sys_button` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -164,7 +189,7 @@ CREATE TABLE `sys_button_role` (
 
 LOCK TABLES `sys_button_role` WRITE;
 /*!40000 ALTER TABLE `sys_button_role` DISABLE KEYS */;
-INSERT INTO `sys_button_role` VALUES (1,3),(2,3),(1,1),(2,1),(3,1),(4,1);
+INSERT INTO `sys_button_role` VALUES (1,1),(2,1),(3,1),(4,1),(12,1),(13,1),(14,1),(15,1),(5,1),(6,1),(7,1),(8,1),(9,1),(11,1),(16,1),(17,1),(18,1),(19,1),(20,1),(21,1),(22,1),(23,1),(24,1),(25,1),(26,1),(27,1),(28,1),(29,1),(30,1),(31,1),(32,1),(33,1),(34,1),(35,1),(36,1),(37,1),(39,1),(38,1),(40,1),(41,1),(42,1),(43,1),(44,1),(45,1),(46,1),(47,1),(48,1),(49,1),(50,1),(51,1);
 /*!40000 ALTER TABLE `sys_button_role` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -200,7 +225,7 @@ CREATE TABLE `sys_group` (
 
 LOCK TABLES `sys_group` WRITE;
 /*!40000 ALTER TABLE `sys_group` DISABLE KEYS */;
-INSERT INTO `sys_group` VALUES (1,41,'菜单按钮','','x-fa fa-indent',2,1,'',0,1558713613,0,1568111789),(4,41,'用户机构','','x-fa fa-user',4,1,'',0,1558714797,0,1568111782),(8,40,'2','','',0,1,'',0,1561609678,0,1568017427),(9,41,'访问权限','','x-fa fa-users',3,1,'',0,1562339144,0,1568111789),(10,41,'系统设置','','x-fa fa-cogs',1,1,'',0,1567832308,0,1568111789);
+INSERT INTO `sys_group` VALUES (1,41,'菜单按钮','','x-fa fa-indent',2,1,'',0,1558713613,0,1568111789),(4,41,'用户机构','','x-fa fa-user',4,1,'',0,1558714797,0,1568111782),(8,40,'学生管理','','x-fa fa-users',1,1,'',0,1561609678,0,1571751641),(9,41,'访问权限','','x-fa fa-users',3,1,'',0,1562339144,0,1568111789),(10,41,'系统设置','','x-fa fa-cogs',1,1,'',0,1567832308,0,1568111789);
 /*!40000 ALTER TABLE `sys_group` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -260,7 +285,7 @@ CREATE TABLE `sys_menu_role` (
 
 LOCK TABLES `sys_menu_role` WRITE;
 /*!40000 ALTER TABLE `sys_menu_role` DISABLE KEYS */;
-INSERT INTO `sys_menu_role` VALUES (1,1),(1,2),(1,3),(2,3);
+INSERT INTO `sys_menu_role` VALUES (2,3),(3,1),(4,1),(5,1),(7,1),(8,1),(9,1),(2,1),(6,1),(1,1),(1,2),(1,3);
 /*!40000 ALTER TABLE `sys_menu_role` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -284,7 +309,7 @@ CREATE TABLE `sys_module` (
   `update_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '最后修改时间',
   PRIMARY KEY (`id`),
   KEY `IDX_SYS_MODULE_GROUP_APP_ID_TAB_INDEX_STATUS` (`app_id`,`tab_index`,`status`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COMMENT='菜单分组';
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COMMENT='菜单分组';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -293,7 +318,7 @@ CREATE TABLE `sys_module` (
 
 LOCK TABLES `sys_module` WRITE;
 /*!40000 ALTER TABLE `sys_module` DISABLE KEYS */;
-INSERT INTO `sys_module` VALUES (1,41,'module1',1,1,'',0,1562839778,0,1568112203),(2,41,'角色权限',4,1,'',0,1568044418,0,1568112203),(3,41,'module2',2,1,'',0,1568112139,0,1568112203),(4,41,'module3',3,1,'',0,1568112153,0,1568112203);
+INSERT INTO `sys_module` VALUES (1,41,'应用管理',2,1,'',0,1562839778,0,1572174074),(2,41,'按钮管理',5,1,'',0,1568044418,0,1572174071),(3,41,'菜单分组',3,1,'',0,1568112139,0,1572174071),(4,41,'菜单管理',4,1,'',0,1568112153,0,1572174071),(5,41,'模块管理',6,1,'',0,1572090384,0,1572174071),(6,41,'访问管理',7,1,'',0,1572090394,0,1572174071),(7,41,'角色管理',8,1,'',0,1572090424,0,1572174071),(8,41,'机构管理',9,1,'',0,1572090439,0,1572174071),(9,41,'用户管理',10,1,'',0,1572090448,0,1572174071),(10,41,'公共操作',1,1,'',0,1572174065,0,1572174074);
 /*!40000 ALTER TABLE `sys_module` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -449,7 +474,7 @@ CREATE TABLE `sys_user_role` (
 
 LOCK TABLES `sys_user_role` WRITE;
 /*!40000 ALTER TABLE `sys_user_role` DISABLE KEYS */;
-INSERT INTO `sys_user_role` VALUES (3,1),(3,5),(1,1),(1,2),(1,3);
+INSERT INTO `sys_user_role` VALUES (3,5),(1,1);
 /*!40000 ALTER TABLE `sys_user_role` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -462,4 +487,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-10-20  3:19:51
+-- Dump completed on 2019-10-28 17:52:25
