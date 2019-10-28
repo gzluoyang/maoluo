@@ -14,7 +14,7 @@ Route::get('think', function () {
     return 'hello,ThinkPHP6!';
 });
 
-Route::get('access/index', 'Access/index')->middleware('auth','admin/access/index');
-Route::get('access/create', 'Access/create')->middleware('auth','admin/access/create');
-Route::get('access/update', 'Access/update')->middleware('auth','admin/access/update');
-
+Route::post('access/create', 'Access/create')->middleware(\app\admin\middleware\AccessCreate::class);
+Route::post('access/update', 'Access/update')->middleware(\app\admin\middleware\AccessUpdate::class);
+Route::post('access/delete', 'Access/delete')->middleware(\app\admin\middleware\AccessDelete::class);
+Route::post('access/roles', 'Access/roles')->middleware(\app\admin\middleware\AccessRoles::class);

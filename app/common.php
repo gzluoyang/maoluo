@@ -139,3 +139,12 @@ function role_buttons_key($role_id)
     return 'role:' . $role_id . '_buttons';
 }
 
+function role_access_key($role_id, $url)
+{
+    return 'role:' . $role_id . '_access:' . $url;
+}
+
+function free_url_key($url)
+{
+    return 'free_url:' . $url;
+}
