@@ -69,29 +69,16 @@ class Home
 
         $list = $this->cacheService->getButtonsByUserID($user_id, $menu_id);
         return json_success($list);
-        /*
-        $key = $menu_key . '_' . $user_id;
-        $val = cache($key);
-        if(empty($val))
-        {
-            $menu = $this->menuService->findByMenuKey($menu_key);
-            $menu_id = $menu['id'];
-            $list = $this->buttonService->findByMenuID($menu_id);
-            $val = json_encode($list);
-            cache($key, $val, 7200);
-            return json_success($list);
-        }
-        else
-        {
-            $list = json_decode($val,true);
-            return json_success($list);
-        }
-        */
     }
 
     public function clearCache()
     {
         Cache::clear();
         return json_success();
+    }
+
+    public function test($code = '123456')
+    {
+        return md5($code);
     }
 }

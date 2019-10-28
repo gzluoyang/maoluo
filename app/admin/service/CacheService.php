@@ -62,6 +62,16 @@ class CacheService
         return $list;
     }
 
+    public function getUrlByAccessID($access_id)
+    {
+        $key = access_url_key($access_id);
+        $url = Cache::remember($key, function() use($access_id) {
+            return Db::name('access')->where('id',$access_id)->value('url');
+        });
+
+        return $url;
+    }
+
     protected function getAllApps()
     {
         $key = all_apps_key();

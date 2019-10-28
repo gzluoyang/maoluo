@@ -148,3 +148,9 @@ function free_url_key($url)
 {
     return 'free_url:' . $url;
 }
+
+function access_url_key($access_id)
+{
+    return 'access:' . $access_id . '_url';
+}
+
