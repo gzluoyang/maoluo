@@ -36,6 +36,7 @@ class User
             throw new Exception($msg);
         }
 
+        unset($user['password']);
         return $user;
     }
 

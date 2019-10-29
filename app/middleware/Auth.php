@@ -26,7 +26,8 @@ class Auth
             throw new Exception('会话超时,请登录!');
         }
 
-        if($uid == 'admin')
+        $username = cache(user_name_key($uid));
+        if($username == 'admin')
             return $next($request);
 
         $cacheService = new CacheService();

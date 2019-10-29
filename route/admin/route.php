@@ -29,3 +29,5 @@ Route::post('user/roles', 'User/roles')->middleware(\app\admin\middleware\UserRo
 Route::post('app/roles', 'App/roles')->middleware(\app\admin\middleware\AppRoles::class);
 Route::post('menu/roles', 'Menu/roles')->middleware(\app\admin\middleware\MenuRoles::class);
 Route::post('button/roles', 'Button/roles')->middleware(\app\admin\middleware\ButtonRoles::class);
+
+Route::post('home/clearCache', 'home/clearCache')->middleware(\app\admin\middleware\CheckAdmin::class);

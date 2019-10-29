@@ -24,7 +24,13 @@ class User
     public function login($username,$password)
     {
         $user = $this->service->login($username,$password);
-        session('user_id',$user['id']);
+
+        $user_id = $user['id'];
+        $username = $user['username'];
+        $key = user_name_key($user_id);
+
+        session('user_id',$user_id);
+        cache($key,$username);
         return json_success();
     }
 

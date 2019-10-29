@@ -5,6 +5,7 @@ namespace app\admin\controller;
 use think\Request;
 use think\Exception;
 use think\facade\Cache;
+use think\facade\View;
 
 use app\admin\service\App as AppService;
 use app\admin\service\Group as groupService;
@@ -37,6 +38,20 @@ class Home
         }
         return json_success();
     }
+
+    public function isAdmin()
+    {
+        $user_id = session('user_id');
+        if(!$user_id)
+            throw new Exception('用户还未登录,或登录超时!');
+        $username = cache(user_name_key($user_id));
+
+        $data = ['isAdmin' => false];
+        if($username == 'admin')
+            $data['isAdmin'] = true;
+        return json_success($data);
+    }
+
 
     /**
      * 显示所有可用的应用
@@ -74,11 +89,7 @@ class Home
     public function clearCache()
     {
         Cache::clear();
+        session('user_id',null);
         return json_success();
-    }
-
-    public function test($code = '123456')
-    {
-        return md5($code);
     }
 }

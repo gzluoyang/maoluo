@@ -75,6 +75,12 @@ function tag($user_id)
     return 'user:' . $user_id;
 }
 
+function user_name_key($user_id)
+{
+    $tag = tag($user_id);
+    return $tag . '_name';
+}
+
 function user_apps_key($user_id)
 {
     $tag = tag($user_id);
