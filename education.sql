@@ -27,6 +27,7 @@ CREATE TABLE `edu_course` (
   `category_id` int(10) unsigned NOT NULL COMMENT '分类ID',
   `code` varchar(32) NOT NULL COMMENT '编码',
   `name` varchar(128) NOT NULL COMMENT '名称',
+  `period` smallint(4) unsigned NOT NULL DEFAULT '0' COMMENT '学时',
   `stutus` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '状态',
   `memo` varchar(256) DEFAULT NULL COMMENT '备注',
   `creator` int(10) unsigned NOT NULL COMMENT '创建者ID',
@@ -76,6 +77,108 @@ CREATE TABLE `edu_course_category` (
 LOCK TABLES `edu_course_category` WRITE;
 /*!40000 ALTER TABLE `edu_course_category` DISABLE KEYS */;
 /*!40000 ALTER TABLE `edu_course_category` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `edu_course_log`
+--
+
+DROP TABLE IF EXISTS `edu_course_log`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `edu_course_log` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `student_id` int(10) unsigned NOT NULL COMMENT '学生ID',
+  `student_code` int(32) NOT NULL COMMENT '学生学号',
+  `course_id` int(10) unsigned NOT NULL COMMENT '课程ID',
+  `code` varchar(32) NOT NULL COMMENT '编码',
+  `name` varchar(128) NOT NULL COMMENT '名称',
+  `period` smallint(4) unsigned NOT NULL DEFAULT '0' COMMENT '学时',
+  `begin_time` int(10) unsigned NOT NULL COMMENT '开始时间',
+  `finish_time` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '完成时间',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '状态',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='课程记录表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `edu_course_log`
+--
+
+LOCK TABLES `edu_course_log` WRITE;
+/*!40000 ALTER TABLE `edu_course_log` DISABLE KEYS */;
+/*!40000 ALTER TABLE `edu_course_log` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `edu_course_section`
+--
+
+DROP TABLE IF EXISTS `edu_course_section`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `edu_course_section` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `course_id` int(10) unsigned NOT NULL COMMENT '课程ID',
+  `title` varchar(128) NOT NULL COMMENT '标题',
+  `intro` varchar(256) DEFAULT NULL COMMENT '简介',
+  `period` smallint(4) unsigned NOT NULL DEFAULT '0' COMMENT '时长',
+  `pdf` varchar(128) DEFAULT NULL COMMENT 'PDF文件',
+  `video` varchar(128) DEFAULT NULL COMMENT '视频文件',
+  `tab_index` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'TAB排序',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '状态',
+  `memo` varchar(256) DEFAULT NULL COMMENT '备注',
+  `creator` int(10) unsigned NOT NULL COMMENT '创建者ID',
+  `create_time` int(10) unsigned NOT NULL COMMENT '创建时间',
+  `updater` int(10) unsigned NOT NULL COMMENT '最后修改人ID',
+  `update_time` int(10) unsigned NOT NULL COMMENT '最后修改时间',
+  PRIMARY KEY (`id`),
+  KEY `idx_edu_course_section_tab_index` (`tab_index`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='课程章节表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `edu_course_section`
+--
+
+LOCK TABLES `edu_course_section` WRITE;
+/*!40000 ALTER TABLE `edu_course_section` DISABLE KEYS */;
+/*!40000 ALTER TABLE `edu_course_section` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `edu_course_section_log`
+--
+
+DROP TABLE IF EXISTS `edu_course_section_log`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `edu_course_section_log` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `course_log_id` int(10) unsigned NOT NULL COMMENT '课程学习记录ID',
+  `course_section_id` int(10) unsigned NOT NULL COMMENT '章节ID',
+  `title` varchar(128) NOT NULL COMMENT '标题',
+  `intro` varchar(256) DEFAULT NULL COMMENT '简介',
+  `period` smallint(4) unsigned NOT NULL DEFAULT '0' COMMENT '时长',
+  `pdf` varchar(128) DEFAULT NULL COMMENT 'PDF文件',
+  `video` varchar(128) DEFAULT NULL COMMENT '视频文件',
+  `tab_index` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'TAB排序',
+  `begin_time` int(10) unsigned NOT NULL COMMENT '开始时间',
+  `duration` int(10) unsigned NOT NULL COMMENT '已学时长',
+  `finish_time` int(10) unsigned NOT NULL COMMENT '完成时间',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '状态',
+  PRIMARY KEY (`id`),
+  KEY `idx_edu_course_section_log_tab_index` (`tab_index`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='课程章节记录表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `edu_course_section_log`
+--
+
+LOCK TABLES `edu_course_section_log` WRITE;
+/*!40000 ALTER TABLE `edu_course_section_log` DISABLE KEYS */;
+/*!40000 ALTER TABLE `edu_course_section_log` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -349,4 +452,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-10-30 14:16:06
+-- Dump completed on 2019-10-30 16:46:29
